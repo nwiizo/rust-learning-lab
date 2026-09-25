@@ -1,58 +1,58 @@
-# Rustコードのレビュー
+# Reviewing Rust code
 
-レビュー対象の不具合・意図との差・変更による影響を、直せる根拠とともに伝える。
-レビューだけならソースコードを編集しない。修正も依頼されたら、その範囲で修正と検証まで進める。
-学習や設計解説を含む詳しいレビューでは、[レビュー文書](review-document.md)として結果を残せる。
-リポジトリの指示や指定された出力形式を優先する。
+English | [日本語](code-review_ja.md)
 
-## 対象と前提を揃える
+Identify defects, mismatches with intent, and the effects of changes with evidence that makes a fix actionable.
+Do not edit source for a review-only request. When fixes are also requested, apply and verify them within scope.
+Detailed reviews with learning or design explanations can become [review documents](review-document.md).
+Follow repository instructions and any requested output format.
 
-指定された差分・ファイル・コード片を読み、目的、呼び出し元、関連テストを必要な範囲で確認する。
-差分のレビューでは変更が生む問題に集中し、既存の問題を今回の変更が起こしたものと混同しない。
-コード片だけなら、見えない呼び出し元や要件を補って断定しない。
-Edition、ツールチェーン、依存の型定義が結論を変えるなら確認する。
-比較先が不明で対象差分が定まらない場合は、その点だけ尋ね、読める部分の確認を進める。
+## Establish scope and assumptions
 
-## 値が境界を越える箇所を追う
+Read the specified diff, files, or snippet, then inspect purpose, callers, and relevant tests as needed.
+In diff reviews, concentrate on problems introduced by the change; do not attribute pre-existing problems to it.
+For a snippet, do not invent unseen callers or requirements. Check the edition, toolchain, and dependency type
+definitions when they affect the conclusion. If an unknown comparison base prevents identifying the diff,
+ask only about that uncertainty while continuing useful inspection.
 
-入口から出力まで、変更した条件がどこへ届くかを追う。以下は関連箇所を探す観点であり、
-すべてを毎回調べるチェックリストではない。
+## Trace values across boundaries
 
-- **引数と所有権**：同じ型の引数の入れ替え、意図しない移動・複製、参照の段数、呼び出し側への影響。
-  `clone()` や参照の使用だけでは不具合としない。必要な所有、データ量、測定できる費用から判断する。
-- **分岐と失敗**：末尾式・戻り値、`?` の戻り先、`unwrap()` の到達条件、エラーを黙って捨てる処理、境界値。
-  `filter_map(Result::ok)` で不正入力を除く動作などは、要求がそれを許すか確かめる。
-- **イテレータと副作用**：遅延実行、短絡、消費される範囲、順序、要素の型。
-  ループの書き換えで実行回数や失敗時の残りの処理が変わっていないかを見る。
-- **状態と並行処理**：借用・ロックガードが保たれる範囲、`.await` をまたぐ保持、キャンセル時に残る状態。
-  `.await` 中のガード保持だけで必ずデッドロックとせず、ロック型・実行環境・待ち合わせを示す。
-- **外から見える動作**：公開API、入力形式、単位、エラー、出力順、必要な性能条件。
-  `unsafe` が関係すれば安全条件と呼び出し側の責任を確認し、コンパイル成功を安全性の証明にしない。
+Follow changed conditions from input to output. These are perspectives to select from, not a mandatory checklist.
 
-## 指摘を確かめる
+- **Arguments and ownership:** swapped same-type arguments, unintended moves or copies, reference depth, and caller effects.
+  Neither `clone()` nor references alone establish a defect. Judge ownership needs, data size, and measurable costs.
+- **Branches and failure:** tail expressions, return values, where `?` returns, reachable `unwrap()` calls, discarded errors,
+  and boundary inputs. Check whether requirements permit behavior such as dropping invalid inputs with `filter_map(Result::ok)`.
+- **Iterators and side effects:** laziness, short-circuiting, how much input is consumed, order, and item types.
+  Check whether a loop rewrite changes execution count or work remaining after failure.
+- **State and concurrency:** borrow and lock-guard scopes, holding state across `.await`, and state left after cancellation.
+  A guard across `.await` does not by itself prove deadlock; identify the lock type, runtime, and waiting relationships.
+- **Observable behavior:** public APIs, input formats, units, errors, output order, and required performance conditions.
+  For `unsafe`, check safety requirements and caller responsibilities; successful compilation does not prove safety.
 
-まず具体的な入力、呼び出し経路、型の対応で、意図と食い違う箇所を特定する。
-可能なら既存テストや小さな再現例で確認する。ユーザーのデータ・認証・設定を使う実行は
-通常の検証へ混ぜず、必要な許可と隔離を確認する。説明のために本番データを変更しない。
+## Substantiate findings
 
-実行していない指摘は、静的に確認した根拠と未確認の条件を分ける。
-APIの仕様と作者の意図を区別し、文書や実装で確認できない理由を作らない。
-警告だけ、仮想的な将来要件だけ、個人的な好みだけを不具合にしない。
-結論に必要な情報が足りなければ、指摘とは分けて未確認事項を短く示す。
+Identify the mismatch using concrete input, a call path, or a type mapping. Where possible, confirm with existing tests
+or a small reproduction. Keep execution using user data, credentials, or configuration separate from ordinary verification;
+check necessary authorization and isolation. Do not modify production data for an explanation.
 
-## 修正できる形で伝える
+For unexecuted findings, distinguish static evidence from unverified conditions. Separate API rules from author intent;
+do not invent reasons absent from documentation or implementation. A warning, hypothetical future requirement,
+or personal preference alone is not a defect. When essential information is missing, state it briefly as an open point,
+separate from established findings.
 
-影響の大きい問題から並べ、同じ原因の指摘をまとめる。
-各指摘は場所、発生条件、観察できる影響、根拠、最小の修正方針を簡潔につなげる。
-ファイルがあれば必要な行番号を示し、コード片に架空のファイル名や行番号を付けない。
-重要度は実際の影響に合わせ、単なる書き方の改善と不具合を分ける。
+## Make findings actionable
 
-初学者向けには、指摘に直結する構文から説明する。たとえばクロージャ内の `?` なら、
-成功時に取り出す値、失敗時に戻るクロージャ、その結果を受け取る外側の処理の順に追う。
-「エラーを返す」だけで終わらず、呼び出し元まで伝わるか、その途中で捨てられないかを示す。
-構文を説明し終わったら、元の指摘と修正方針へ戻る。無関係な講義で指摘を埋めない。
+Order by impact and combine findings with the same cause. Connect location, triggering conditions, observable impact,
+evidence, and the smallest correction. Include relevant line numbers for actual files; do not invent filenames or line
+numbers for snippets. Base severity on real impact, distinguishing defects from optional style improvements.
 
-修正案は条件を満たす最小のものを優先し、代案は動作や費用に違いがあるときだけ添える。
-確認した範囲と残る不確実性を示し、問題が見つからなければそのまま伝える。
-「問題が見つからない」と「全面的に安全」を同じ意味にしない。指摘件数を埋めるために問題を作らない。
-学習目的が明示された場合だけ、最後に別条件への小さな変更や理解確認を添える。
+For beginners, explain syntax directly involved in the finding. For `?` inside a closure, trace the success value,
+the closure exited on failure, and the outer operation receiving the result. Go beyond “returns an error” to show
+whether it reaches the caller or is discarded on the way. Return to the finding and fix after explaining the syntax;
+do not bury the problem beneath unrelated instruction.
+
+Prefer the smallest fix that meets the conditions. Add alternatives only when behavior or cost differs.
+State what was inspected and what remains uncertain. If no problems are found, say so; do not equate that with universal
+safety or manufacture findings to fill a quota. Add an optional transfer question or small modification only when learning
+is an explicit goal.

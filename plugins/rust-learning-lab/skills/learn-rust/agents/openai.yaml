@@ -1,4 +1,4 @@
 interface:
   display_name: "Learn Rust"
-  short_description: "Rustの構文と背景を理解し、練習と根拠のあるコードレビューに活かす"
-  default_prompt: "$learn-rust を使い、このRustコードを構文と背景から読み解いてください。レビューを頼んだ場合は、問題の場所・条件・影響と修正理由を先に示してください。"
+  short_description: "Learn and review Rust with clear reasoning and practice"
+  default_prompt: "Use $learn-rust to explain this Rust code through syntax and purpose. For a review, lead with findings, their impact, and fixes. Respond in the conversation's language."

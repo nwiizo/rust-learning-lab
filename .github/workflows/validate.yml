@@ -18,10 +18,33 @@ jobs:
           jq -e '.name == "rust-learning-lab" and .plugins[0].name == "rust-learning-lab" and .plugins[0].source.path == "./plugins/rust-learning-lab" and .plugins[0].policy.installation == "AVAILABLE" and .plugins[0].policy.authentication == "ON_INSTALL"' .agents/plugins/marketplace.json
           jq -e '.name == "rust-learning-lab" and .plugins[0].name == "rust-learning-lab" and .plugins[0].source == "./plugins/rust-learning-lab"' .claude-plugin/marketplace.json
           test -f "$plugin/skills/learn-rust/SKILL.md"
+      - name: Check bilingual files and Rust example parity
+        shell: bash
+        run: |
+          set -euo pipefail
+          skill=plugins/rust-learning-lab/skills/learn-rust
+          for english in README.md AGENTS.md docs/evaluation.md "$skill/SKILL.md"; do
+            test -f "${english%.md}_ja.md"
+          done
+          for document in "$skill"/references/*.md; do
+            if [[ "$document" == *_ja.md ]]; then
+              test -f "${document%_ja.md}.md"
+              continue
+            fi
+            japanese="${document%.md}_ja.md"
+            test -f "$japanese"
+            # Match literal Markdown fences; shell expansion is not intended.
+            # shellcheck disable=SC2016
+            diff -u <(sed -n '/^```rust/,/^```/p; /^```compile_fail/,/^```/p' "$document") <(sed -n '/^```rust/,/^```/p; /^```compile_fail/,/^```/p' "$japanese")
+          done
       - name: Install Rust
         run: rustup toolchain install stable --profile minimal
       - name: Check executable learning examples
+        shell: bash
         run: |
-          rustdoc +stable --test --edition 2024 plugins/rust-learning-lab/skills/learn-rust/references/worked-examples.md
-          rustdoc +stable --test --edition 2024 plugins/rust-learning-lab/skills/learn-rust/references/rust-2024.md
-          rustdoc +stable --test --edition 2024 plugins/rust-learning-lab/skills/learn-rust/references/review-example.md
+          set -euo pipefail
+          references=plugins/rust-learning-lab/skills/learn-rust/references
+          for topic in worked-examples rust-2024 review-example; do
+            rustdoc +stable --test --edition 2024 "$references/$topic.md"
+            rustdoc +stable --test --edition 2024 "$references/${topic}_ja.md"
+          done

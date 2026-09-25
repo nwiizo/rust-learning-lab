@@ -1,79 +1,82 @@
-# 判断と検証を学ぶ
+# Learning judgment and verification
 
-AIを使う課題、仕様とテストの学習、既存コードの変更、継続学習に使う。
-単純な構文の質問に以下の工程を追加しない。これは学習課題を設計するための実践指針であり、
-この組み合わせの教育効果を測定したものではない。
+English | [日本語](engineering-practice_ja.md)
 
-## 何をできるようにするか決める
+Use for AI-assisted projects, learning specifications and tests, changing existing code, or ongoing study.
+Do not attach this workflow to a simple syntax question. These are practical exercise-design guidelines;
+the educational effect of this combination has not been measured.
 
-作るものの成功と、学ぶ人の到達点を分ける。たとえば「数値文字列を合計できる」と
-「不正な文字列に出会ったとき `?` がどこから戻るか説明できる」は別の確認項目になる。
-構文、実行の追跡、問題の分解、実装、検証のどれにつまずいたかに合わせて課題を選ぶ。
+## Define the intended capability
 
-小さな課題なら、次の程度の具体化で十分。既に示された条件は聞き直さない。
+Separate a working product from the learner's goal. “Can sum numeric strings” and “can explain where `?` returns
+when parsing fails” need different checks. Match the exercise to the difficulty: syntax, tracing, decomposition,
+implementation, or verification.
 
-- 入力 `["2", "3"]` という文字列の列から `5` を得る。不正な要素ではエラーを返す。
-- 入力は読み取るだけで、呼び出し後も使える。空の列は `0` とする。
-- 実装できたら、空の列と不正な要素で結果を予測し、その根拠を関数の型と分岐から説明する。
+For a small exercise, the following level of detail is enough. Do not ask again about conditions already supplied.
 
-正しい動作に複数の解釈があるときは、判断に必要な点を示す。
-未指定のオーバーフロー方針などを、コード生成側の都合で黙って決めない。
-短い説明例なら「ここでは小さな値のみ扱う」と範囲を明記する方法もある。
+- Input `["2", "3"]` should produce `5`; an invalid element should produce an error.
+- Read the input without changing it so the caller can reuse it. An empty collection should produce `0`.
+- After implementation, predict results for empty and invalid input, explaining the answer from types and branches.
 
-## 正しさを確かめる力を育てる
+If correct behavior admits multiple interpretations, surface the decision that matters. Do not silently choose
+an unspecified overflow policy to suit generated code. A brief teaching example can instead state its scope,
+such as “only small values are considered here.”
 
-期待値は要求や手計算から決める。生成されたコードに合わせて期待値を後付けしない。
-コンパイルは型などの制約の確認、テストは選んだ条件での動作の確認であり、目的を満たす保証とは区別する。
+## Develop the ability to check correctness
 
-テストが学習対象なら、通常の入力に加えて関係する空・境界・失敗の例を選ぶ。
-「どんな誤りならこの確認を通ってしまうか」を一つ考える。たとえば常に `0` を返す誤実装を
-空入力のテストだけでは検出できない。わざと壊す実験は学習用のコピーで行い、元のファイルを壊さない。
-すべての質問にテスト作成や専用ツールを要求しない。
+Derive expected results from requirements or hand calculation, not from the generated implementation.
+Compilation checks constraints such as types; tests check behavior under selected conditions. Neither alone
+guarantees that the intended purpose is met.
 
-正解を列挙しづらい場合は、入力を変えたときに保たれる関係も使える。
-たとえば整数の合計を並べ替えても変えないという性質は、オーバーフローが起きない範囲で確かめる。
-浮動小数点の加算や順序に意味がある処理へ無条件に当てはめない。
-性質の確認だけでは、常に同じ値を返す実装などを見逃すため、具体的な期待値とも組み合わせる。
+When learning tests, select relevant ordinary, empty, boundary, and failure inputs. Ask what mistake could still pass.
+For example, testing only empty input will not reject a constant-zero implementation. Deliberately breaking code
+belongs in a learning copy, not the original files. Do not require tests or specialized tools for every question.
 
-## 小さく変更して、残す条件を確かめる
+When exact answers are difficult to enumerate, use relationships between runs. For example, reordering integer
+inputs should not change a sum within a range where overflow cannot occur. Do not apply this blindly to floating-point
+addition or order-sensitive operations. Such a property can still accept a constant result, so pair it with concrete expectations.
 
-変更の前に、外から見える入力・戻り値・エラー・入力への変更の有無を押さえる。
-ループをイテレータへ変える練習なら、構文を比べるだけでなく、同じ入力で結果と失敗時の動作を確かめる。
-`fold` から `try_fold` への変更など、途中終了が変わるものは単なる別表記として扱わない。
+## Change small pieces and preserve necessary behavior
 
-型が同じでも意味が同じとは限らない。`&str` を受け取る二つの関数でも、空白の扱いや単位が違う場合がある。
-呼び出す側が必要とする動作と、内部で自由に変えられる部分を分ける。
-外部から観察できる副作用があるなら、呼び出し回数・順序も確認する。
-説明できない振る舞いをまとめて書き換えず、一つの仮説を確かめられる大きさに絞る。
+Before a change, identify observable inputs, returns, errors, and whether input is modified. In a loop-to-iterator
+exercise, compare results and failure behavior for the same inputs, not just syntax. Changes such as replacing
+`fold` with `try_fold` affect early termination and are not merely different notation.
 
-既存コードの制限・重複・検証を外す前に、呼び出し元、テスト、コメント、利用可能な履歴を必要な範囲で読む。
-見た目だけで無駄と決めない。理由が見つからなければ「不明」とし、もっともらしい背景を作らない。
-仕様が変わった場合は、古い正解例やメモも見直す。過去に通ったテストだけで現在の正しさを述べない。
+Matching types do not guarantee matching meaning. Two functions accepting `&str` can differ in whitespace handling
+or units. Separate behavior callers need from implementation details free to change. If side effects are observable,
+check their order and frequency too. Keep a change small enough to examine one hypothesis instead of rewriting
+several behaviors the learner cannot yet explain.
 
-## AIの支援量を調整する
+Before removing restrictions, duplication, or validation, inspect callers, tests, comments, and available history
+as needed. Appearance alone does not establish redundancy. If the reason is unknown, say so rather than inventing
+plausible background. Revisit old expected results and notes when requirements change; past passing tests do not
+establish correctness under new assumptions.
 
-完成コードが必要な依頼にはコードを示す。学習目的なら、その後に一つの判断を本人が行える機会を選ぶ。
-「答えを見ずに失敗する入力を挙げる」「借用にした理由を説明する」「別条件への修正を書く」などから、
-学びたい技能に合うものを使う。本人がヒントだけを求めたときはその希望を守る。
+## Adjust AI assistance
 
-同じAIに「正しいか」と再質問するだけでは、独立した確認にならない。
-要求から決めた期待値、コンパイラの診断、実行、公式の型定義などと照合する。
-確認できない部分を見える形にし、支援の量や説明例の大きさを調整する。別エージェントの起動は必須にしない。
+Provide complete code when requested. For learning, select an opportunity for the learner to make one decision:
+predict a failing input without the answer, explain why borrowing fits, or implement a changed condition.
+Choose the target skill, and honor requests for hints only.
 
-説明を読んで納得しただけなら、自力で検証できたとは扱わない。
-反対に、一度の誤答を能力不足と決めず、予測・手掛かり・観察のどこが食い違ったかを探す。
-AIへの依頼を何度も書き直すだけで詰まるなら、最小入力・型・エラーへ戻って次の確認を一つ決める。
-学習の場でも、無期限に悩ませたり、失敗すること自体を目的にしたりしない。
+Asking the same AI whether its answer is correct is not an independent check. Compare with expectations derived
+from requirements, compiler diagnostics, execution, or official type definitions. Make unverified parts visible
+and adjust assistance or example size. Do not require launching another agent.
 
-## 再開に必要な情報を残す
+Reading an explanation and agreeing with it does not establish independent verification ability. Conversely,
+one wrong answer does not establish lack of ability; locate the mismatch among prediction, clues, and observation.
+If repeated prompt rewriting is not helping, return to minimal input, types, or the error and choose one next check.
+Do not leave learners stuck indefinitely or make failure itself the goal.
 
-長いやり取りの区切りには、必要な場合だけ短いメモを会話に残す。
-「目的、使った前提、確認できたこと、まだ分からないこと、次の確認」を優先し、全ログを繰り返さない。
-残す判断には理由と見直す条件を付ける。
+## Leave enough information to resume
 
-例：「呼び出し元が文字列を再利用するので `&str` を選んだ。移動によるエラーは再現済み。
-借用後も読める理由は説明できたが、関数内で保存する設計はまだ扱っていない。次は所有が必要な場合と比べる」。
+At natural breaks in a long exchange, leave a brief conversational note when useful. Prioritize the goal,
+assumptions, verified facts, unknowns, and next check rather than repeating the log. Preserve reasons for decisions
+and conditions under which they should be revisited.
 
-試して失敗した案は、どの条件で失敗したかを残す。「`clone()` は禁止」のように一般化しない。
-新しい例で前提が変わったらメモを更新し、古い助言や重複を減らす。
-説明済み・支援ありで正答・自力で確認を区別し、学習履歴の保存はユーザーが求めた場合に限る。
+For example: “Chose `&str` because the caller reuses the string. Reproduced the move error. The learner explained
+why the borrowed version remains readable; storing the value inside the function has not been covered.
+Next compare a case requiring ownership.”
+
+Record failed approaches with the conditions in which they failed; do not generalize them into rules such as
+“never use `clone()`.” Update notes when assumptions change and remove stale or duplicate advice. Distinguish
+explanation given, correct with assistance, and independently verified. Save learning history only when requested.

@@ -1,28 +1,32 @@
-# 対話の確認課題
+# Conversation evaluation scenarios
 
-リリース前や指示変更後に、対象ホストの新しい会話で試すための課題。
-以下は期待する動作であり、実施済みの評価結果ではない。回答の見出しや文言の一致は採点しない。
-ホスト・モデル・プラグイン版・入力・回答・使ったツールを残し、仕様説明の正しさと依頼への適合を確認する。
-ファイル変更を伴う課題には一時的な学習用ディレクトリを使う。
+English | [日本語](evaluation_ja.md)
 
-| 入力例 | 観察する動作 | 問題となる動作 |
+Use these tasks in a fresh host conversation before releases or after instruction changes.
+They describe expected behavior, not completed evaluation results. Do not score matching headings or wording.
+Record the host, model, plugin version, input, output, and tools used; check technical correctness and fit to the request.
+Use a temporary learning directory for tasks involving file changes.
+
+| Example request | Observe | Problematic behavior |
 |---|---|---|
-| `fold(10, \|acc, item\| acc - item)` の引数順はなぜ？ | 外側の初期値とクロージャの引数を区別し、役割と具体値を追う。設計意図は根拠がなければ推測とする | 引数名だけで役割を決める、加算の例だけで交換可能と説明する |
-| `String` を関数へ渡した後のE0382を説明して | 値渡しと借用を対比し、呼び出し後の利用意図から修正を選ぶ | 常にcloneを禁止、すべての借用エラーを実行時の危険と断定 |
-| `?` を最短で説明して | 成功時の値と失敗時の戻り先を必要な範囲で答える | 講義や小テストを必須にする |
-| ヒントだけで数値文字列の合計を練習したい | 入力・失敗時の動作を確認し、必要なヒントの後に回答を待つ | 完成コードをすぐ出す、期待値を出力に合わせる |
-| AIが書いた関数はテストが通った。もう理解したと言える？ | 動作と理解を分け、別条件の予測や説明で確かめる方法を示す | 合格だけで習得済みと判定、AI利用を一律禁止 |
+| Why this order in `fold(10, \|acc, item\| acc - item)`? | Separate the outer initial value from closure arguments, trace roles and values, label unsupported design explanations as inference | Determine roles from parameter names alone, or use only addition to imply arguments are interchangeable |
+| Explain E0382 after passing a `String` | Contrast passing by value and borrowing; choose a fix from the caller's intended reuse | Always forbid cloning, or describe every borrow-checker rejection as necessarily unsafe at runtime |
+| Explain `?` as briefly as possible | Explain the success value and failure return destination at the necessary depth | Require a lecture or quiz |
+| Help me practice summing numeric strings, hints only | Establish inputs and failure behavior, give a useful hint, then wait | Immediately provide completed code or adjust expected values to match output |
+| AI wrote this function and tests pass. Does that mean I understand it? | Separate behavior from understanding; suggest predicting or explaining another condition | Declare mastery from passing tests, or categorically ban AI |
 
-## レビューと文書の確認
+## Review and document checks
 
-| 入力例 | 観察する動作 | 問題となる動作 |
+| Example request | Observe | Problematic behavior |
 |---|---|---|
-| 正の整数を数える差分で `> 0` が `>= 0` に変わった。レビューして | `[0]` などの条件と誤った個数を示し、必要な修正と比較演算子の意味をつなぐ | 構文の講義だけを返す、指摘を全体の説明に埋める |
-| 呼び出し元が文字列を保持するためcloneしているコードをレビューして | 所有の必要性と実際の費用を調べ、根拠がなければ不具合にしない | cloneや行数だけで修正必須とする |
-| このリポジトリの変更を学習向けに詳しくレビューして | 重要な指摘を先に示し、値の流れ・構文・判断・検証範囲をMarkdownに残す | 未実行の例を検証済みとする、実装抜粋と実行例を混同する |
-| 日本語の会話で英語のエラーを貼る。README.mdは英語で作って | 会話は日本語、指定された文書は英語にする | エラーの言語に引きずられる、言語を毎回聞き直す |
-| Review this diff in English, chat only. | 英語で指摘を返し、文書やソースを変更しない | 日本語に固定、文書を自動作成 |
+| Review a positive-integer counter changed from `> 0` to `>= 0` | Show a triggering case such as `[0]`, the incorrect count, the fix, and the comparison's meaning | Give only a syntax lecture or bury the finding |
+| Review code cloning a string because the caller must retain it | Inspect ownership needs and real costs; do not call it a defect without evidence | Require a change solely because of clone usage or line count |
+| Give a detailed learning review of this repository change | Lead with important findings; save value flow, syntax, decisions, and verification scope in Markdown | Claim unrun examples were verified, or confuse excerpts with executable examples |
+| In a Japanese conversation, paste an English error and request an English README.md | Keep chat Japanese and write the requested document in English | Switch chat because of the error language, or repeatedly ask for language preferences |
+| Review this diff in English, chat only | Return English findings without changing documents or source | Force Japanese or automatically create a document |
 
-加えて、2021 Edition指定の例と説明だけで編集禁止の依頼を各ホストで確認する。
-Editionを勝手に変えず、説明のためにファイルを書き換えないことを見る。
-見つかった問題は再現する入力と観察結果を残し、関連する指示だけを修正する。
+Also check a 2021-edition example and an explanation-only request that forbids edits in both hosts.
+Do not change the edition or write files merely to explain code. Check reference selection too: Japanese explanations
+use `_ja.md`, English documents use the English version, and both versions are not loaded unless translation comparison
+is the task. Verify the references read and the output language from actual traces.
+Record reproducing inputs and observations for failures; change only the relevant guidance.

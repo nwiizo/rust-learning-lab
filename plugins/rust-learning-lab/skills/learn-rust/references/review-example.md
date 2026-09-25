@@ -1,17 +1,19 @@
-# 正の整数を数える処理を、参照の流れからレビューする
+# Reviewing a positive-integer count through reference flow
 
-対象は[説明例](worked-examples.md#実装を変えても必要な動作を保つ)の二つの `count_positive` 実装です。
-ループからイテレータへ書き換えるとき、何を確認し、構文をどう読むかを示す短いレビュー文書です。
-実際のPRやユーザーのプロジェクトのレビュー結果を表すものではありません。
+English | [日本語](review-example_ja.md)
 
-## 目的と確認結果
+This short review examines the two `count_positive` implementations in the
+[worked examples](worked-examples.md#preserve-required-behavior-across-implementations).
+It demonstrates what to check and how to read the syntax when replacing a loop with an iterator.
+It is not a review result for an actual PR or a user's project.
 
-目的は「入力を変更せず、0より大きい整数の個数を返す」です。
-ループ版とイテレータ版は、この条件に沿って個数を数えています。
-通常・空・0のみの入力では、要求から決めた期待値に一致する確認例を用意しています。
-現時点でこの範囲の不具合の指摘はありません。任意のプログラム全体の安全性まで示すものではありません。
+## Purpose and findings
 
-## 一行になるまでに値はどこへ渡るか
+The goal is to count integers greater than zero without modifying the input. Both implementations follow that condition.
+The examples check ordinary, empty, and zero-only input against expectations derived from the requirement.
+No defects are identified within that scope; this does not establish safety of an arbitrary surrounding program.
+
+## Where values go in a one-line implementation
 
 ```rust
 fn count_positive(values: &[i32]) -> usize {
@@ -25,57 +27,56 @@ assert_eq!(count_positive(&[]), 0);
 assert_eq!(count_positive(&[0]), 0);
 ```
 
-`fn count_positive(values: &[i32]) -> usize` は、整数列への共有参照を受け取り、個数を返す関数の宣言です。
-`values` が引数名、`&[i32]` が型、`-> usize` が戻り値の型です。
-`count_positive(&input)` の `&input` が `values` へ渡り、配列への参照からスライスへの参照に変換されます。
-列を読みたいだけなので、値を所有する `Vec<i32>` や、内容を変更できる `&mut [i32]` は必要ありません。
+`fn count_positive(values: &[i32]) -> usize` declares a function that accepts a shared reference to an integer slice
+and returns a count. `values` is the parameter, `&[i32]` its type, and `usize` the return type after `->`.
+In `count_positive(&input)`, the borrowed array is coerced to a slice reference and passed to `values`.
+Reading the collection does not require owning a `Vec<i32>` or accepting a mutable `&mut [i32]`.
 
-| 段階 | 受け取るもの | 次へ渡すもの |
+| Stage | Receives | Passes onward |
 |---|---|---|
-| `values.iter()` | `&[i32]` の受け手 | `&i32` を要素に持つイテレータ |
-| `.filter(...)` | イテレータと判定用のクロージャ | 条件を満たした `&i32` のイテレータ |
-| `\|value\| **value > 0` | 要素への参照 `&&i32` | 残すかどうかの `bool` |
-| `.count()` | 絞り込み後のイテレータ | 個数 `usize` |
+| `values.iter()` | A receiver of type `&[i32]` | An iterator with items of type `&i32` |
+| `.filter(...)` | An iterator and a predicate closure | An iterator over qualifying `&i32` items |
+| `\|value\| **value > 0` | A reference to an item: `&&i32` | A `bool` indicating whether to keep it |
+| `.count()` | The filtered iterator | A count of type `usize` |
 
-`filter` に渡す引数はクロージャ一つ。そのクロージャへ `value` を渡すのは、列挙を進める側です。
-`|value|` は引数の宣言、後ろの式が返す値になります。
-ここで `value` に参照が二段あるのは、要素自体が `&i32` で、判定にはその要素への参照が渡されるためです。
-二つの `*` はその参照を順にたどります。`**value > 0` が `true` なら、その要素が次へ進みます。
+The explicit argument to `filter` is one closure. The iteration machinery supplies `value` when calling it.
+`|value|` declares the parameter; the following expression is its result. There are two reference layers because
+items are `&i32` and the predicate receives a reference to each item. Each `*` follows one layer.
+An item continues when `**value > 0` is `true`.
 
-`iter().filter(...)` を作った時点では、まだ全要素の判定を実行していません。
-`count()` が列挙を進めることで条件が調べられます。関数の最後の式に `;` がないので、個数をそのまま返します。
-外側の `input` を削除・並べ替えする処理はなく、呼び出し後も値を使えます。
+Constructing `iter().filter(...)` has not yet tested every element. `count()` drives iteration and runs the predicate.
+The final expression has no semicolon, so its count is returned. Nothing deletes or reorders the original `input`,
+which remains usable after the call.
 
-## 「短くなった」以外に確認すること
+## Check more than brevity
 
-引数と戻り値の型が同じでも、`> 0` を `>= 0` にすると0を数えるため、目的から外れます。
-`[0]` の期待値を0にした確認は、この間違いを検出できます。
-二つの実装同士の一致だけを見ると、同じ間違いを含む場合には通ってしまいます。
-そのため、要求から決めた期待値を残します。
+The types would remain the same if `> 0` became `>= 0`, but counting zero would violate the requirement.
+The `[0]` case with expected count zero detects that mistake. Comparing implementations only with each other could
+miss the same mistake in both; retain expectations derived from the requirement.
 
-この例では判定に副作用がありません。ログ出力などを追加する別の変更では、
-いつ・何回判定するかも確認対象になります。見た目が似ているだけで動作も同じとは判断しません。
+The predicate has no side effects here. If another change adds logging or other effects, when and how often it runs
+also matter. Similar-looking code alone does not establish equivalent behavior.
 
-## 条件を一つ変えて考える
+## Change one condition
 
-「正の整数」から「0以上の整数」に変わったら、どの式と期待値を変える必要があるでしょうか。
+If the requirement becomes “integers greater than or equal to zero,” which expression and expectations need changing?
 
 <details>
-<summary>答えと理由</summary>
+<summary>Answer and reasoning</summary>
 
-条件は `**value >= 0` になります。最初の入力の結果は3、`[0]` の結果は1へ変わります。
-空の入力は0のままです。関数の引数や戻り値の型、入力を借りる判断は変える必要がありません。
+Use `**value >= 0`. The first input produces 3 and `[0]` produces 1. Empty input still produces 0.
+Neither the signature nor the decision to borrow input needs changing.
 
 </details>
 
-## 照合と検証
+## Sources and verification
 
-元の二つの実装は[説明例](worked-examples.md)にあります。
-このファイルは次のコマンドで、独立した実行例を検証できます。
+Both original implementations are in the [worked examples](worked-examples.md). Check this document's standalone
+example with:
 
 ```sh
 rustdoc --test --edition 2024 plugins/rust-learning-lab/skills/learn-rust/references/review-example.md
 ```
 
-Rust 1.98.1 / Edition 2024で実行例1件を確認しています。
-これは上記の有限個の入力とRust例の検証であり、学習効果やモデルのレビュー精度を測定した結果ではありません。
+One executable example has been checked with Rust 1.98.1 / Edition 2024. This verifies the finite inputs and Rust
+example above; it does not measure learning effectiveness or a model's review accuracy.

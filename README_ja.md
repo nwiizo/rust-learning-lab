@@ -7,7 +7,7 @@
 Rustのコードを、記号の読み方・引数の対応・型と所有権・その仕組みが必要な理由から説明する、
 Codex / Claude Code向けの学習・レビュー支援プラグインです。読むだけで終わらず、小さな変更・実装・デバッグへつなげます。
 レビューでは問題の場所・条件・影響と修正理由を示し、詳しい設計解説は読み返せるMarkdownに残します。
-指示は日本語で記述していますが、回答には会話から判断した言語を使い、文書は指定や既存の慣例に合わせます。
+スキルの指示と8種類すべてのリファレンスを日英で用意しています。回答には会話から判断した言語を使い、文書は指定や既存の慣例に合わせます。
 
 ## インストール
 
@@ -59,7 +59,7 @@ docs/parser-learning-review.md に残してください。
 コードやエラー全文、分かっている範囲があれば、一緒に渡してください。
 リポジトリを対象にした詳しい学習レビューでは、既定で `docs/rust-learning-review.md` などに文書を残します。
 保存先の指定や「チャットのみ」「読み取り専用」を優先し、ソースの修正は修正も依頼されたときに行います。
-[生成するレビュー文書の短い例](plugins/rust-learning-lab/skills/learn-rust/references/review-example.md)も参照できます。
+[生成するレビュー文書の短い例](plugins/rust-learning-lab/skills/learn-rust/references/review-example_ja.md)も参照できます。
 
 ## 学べること
 
@@ -70,26 +70,32 @@ docs/parser-learning-review.md に残してください。
 - **継続学習**：説明済みと自力で確認できたことを分け、次に試す一点を残します。
 
 10件のプログラミング教育・AI支援研究と、2件の記憶研究を参考にしています。
-対象・結果・限界を[研究ノート](plugins/rust-learning-lab/skills/learn-rust/references/learning-evidence.md)に記載しています。
+対象・結果・限界を[研究ノート](plugins/rust-learning-lab/skills/learn-rust/references/learning-evidence_ja.md)に記載しています。
 他言語や授業の結果をRustの個別学習へそのまま一般化せず、このプラグイン自体の学習効果は未測定です。
 
 ## 開発と確認
 
 `plugins/rust-learning-lab/skills/learn-rust/` が両ホストで共用するスキルです。
-補助資料は質問に必要なときだけ読み込みます。MCPサーバー、フック、独自ランタイムは含みません。
+補助資料は質問に必要なときだけ、今作る説明・文書の言語に合わせて読み込みます。
+英語版と `_ja.md` の日本語版は相互リンクし、日本語版内の参照も日本語の資料へつなぎます。
+その他の回答言語では英語の資料を参照し、回答言語は変えません。通常は両言語を重複して読み込みません。
+MCPサーバー、フック、独自ランタイムは含みません。
 プラグイン自身によるデータ収集はありません。会話やツール実行には利用するホストの設定が適用されます。
 
 ```sh
-rustdoc --test --edition 2024 plugins/rust-learning-lab/skills/learn-rust/references/worked-examples.md
-rustdoc --test --edition 2024 plugins/rust-learning-lab/skills/learn-rust/references/rust-2024.md
-rustdoc --test --edition 2024 plugins/rust-learning-lab/skills/learn-rust/references/review-example.md
+rustdoc --test --edition 2024 plugins/rust-learning-lab/skills/learn-rust/references/worked-examples_ja.md
+rustdoc --test --edition 2024 plugins/rust-learning-lab/skills/learn-rust/references/rust-2024_ja.md
+rustdoc --test --edition 2024 plugins/rust-learning-lab/skills/learn-rust/references/review-example_ja.md
 claude plugin validate .
 claude plugin validate plugins/rust-learning-lab
 ```
 
-CIは配布メタデータの整合とRust例を確認します。[対話の確認課題](docs/evaluation.md)は手動評価用です。
+英語版にも同じdoctestを実行してください。CIは配布メタデータ、日英のファイル対応、Rustコードの一致、両言語の実行例を確認します。
+[対話の確認課題](docs/evaluation_ja.md)は手動評価用です。
 構文検査やコード例の成功だけでは、モデルの回答品質や学習効果を実証できません。
 変更時は両ホストのmanifestのversionを揃えて更新してください。
-READMEの利用方法を変えた場合は、英語版と日本語版を合わせて更新してください。
+意味を変えた場合は、英語版と日本語版を合わせて更新してください。
+日英資料、レビュー文書、検証、公開の方針は[リポジトリのルール](AGENTS_ja.md)に記載し、Claude Codeからも同じ方針を読み込みます。
+資料の使い分けは[スキルの説明](plugins/rust-learning-lab/skills/learn-rust/SKILL_ja.md)を参照してください。
 
 MIT License。リンク先の論文・外部資料にはそれぞれの利用条件が適用されます。

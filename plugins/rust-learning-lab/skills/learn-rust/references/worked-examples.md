@@ -1,11 +1,12 @@
-# 実行できる説明例
+# Executable worked examples
 
-引数順・借用・早期リターンを具体的に説明するときの対比例。
-Rust 2024で `rustdoc --test --edition 2024 <このファイル>` を実行すると、成功例と意図したコンパイル失敗を確認できる。
-`assert_eq!` は二つの値が等しいことを確認し、違う場合にテストを失敗させるマクロ。
-例の値や説明量は学習者の質問へ合わせる。
+English | [日本語](worked-examples_ja.md)
 
-## 外側の引数とクロージャの引数
+Use these contrasts to explain argument order, borrowing, and early returns. Run
+`rustdoc --test --edition 2024 <this-file>` to check successful examples and intentional compile failures.
+`assert_eq!` compares two values and fails the test when they differ. Adapt values and explanation depth to the question.
+
+## Outer arguments and closure parameters
 
 ```rust
 let values = [1, 2, 3];
@@ -16,31 +17,31 @@ let reversed = values.into_iter().fold(10, |item, acc| acc - item);
 assert_eq!(reversed, -8);
 ```
 
-`into_iter()` が配列から要素を順に取り出すイテレータを作り、`fold` が累積値を更新する。
-ここでは要素が `i32` と推論され、配列も `Copy` なので二回目にも `values` を使える。
-`String` の配列などでも同じとは限らない。
+`into_iter()` creates an iterator over the array's elements, and `fold` updates an accumulator.
+Here the elements are inferred as `i32`; the array is also `Copy`, so `values` remains available for the second call.
+That does not automatically hold for an array of `String`.
 
-[`fold`の型定義](https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.fold)で重要なのは、
-`init: B` と `f: F`、および `F: FnMut(B, Self::Item) -> B` の対応。
-`B` は累積値の型、`Self::Item` は要素の型、`F` は渡す処理の型を表す。
-`FnMut(...) -> B` は、括弧内の型の引数を受け取り `B` を返す呼び出しが可能であるという条件。
-この例ではどちらの値も `i32`。`fold` へは初期値 `10` と処理を渡し、処理へ値を渡すのは `fold` 側になる。
+The relevant parts of the [`fold` definition](https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.fold) are
+`init: B`, `f: F`, and `F: FnMut(B, Self::Item) -> B`. `B` is the accumulator type, `Self::Item` the item type,
+and `F` the supplied operation's type. `FnMut(...) -> B` requires a callable accepting those argument types and
+returning `B`. Both values here are `i32`. The caller gives `fold` an initial `10` and an operation; `fold` supplies
+values to that operation.
 
-`|acc, item|` の二本の `|` は引数部分を囲み、その後の `acc - item` が返す値。
-引数名は自由でも、最初に累積値、次に要素が入るという位置は変わらない。
+The bars in `|acc, item|` enclose parameters; `acc - item` is the returned expression. Parameter names are freely
+chosen, but their positions remain accumulator first and current item second.
 
-| 呼び出し | 累積値（第1引数） | 要素（第2引数） | `acc - item` の結果 |
+| Call | Accumulator (first argument) | Item (second argument) | Result of `acc - item` |
 |---|---:|---:|---:|
 | 1 | 10 | 1 | 9 |
 | 2 | 9 | 2 | 7 |
 | 3 | 7 | 3 | 4 |
 
-二つ目の式では名前を逆にしたため、実際の計算が「要素 − 累積値」になり、`-9 → 11 → -8` と進む。
-両方が同じ型なのでコンパイルできても、意味は違う。
-順序はこのAPIの定義で決まる。累積値を受け渡す流れとして理解はできるが、
-言語がすべてのAPIにこの順番を強制するわけではなく、歴史的な採用理由を推測で断定しない。
+The second expression reverses names, making the calculation item minus accumulator: `-9 → 11 → -8`.
+Both arguments have the same type, so the code compiles while meaning something different.
+This order comes from this API's definition. Passing the accumulated state along helps explain how it works, but
+Rust does not impose this order on every API, and that explanation does not establish the historical design reason.
 
-## 型の中の `&` と借用する式の `&`
+## `&` in a type and `&` in a borrowing expression
 
 ```rust
 fn byte_len(text: &str) -> usize {
@@ -53,13 +54,12 @@ assert_eq!(length, 4);
 assert_eq!(name, "Rust");
 ```
 
-`text: &str` は「文字列スライスを共有参照で受け取る」引数の宣言。
-`&name` は `name` を借用する式で、ここでは `&String` から `&str` への変換が働く。
-関数は読むために借りるので、呼び出し後にも `name` が使える。`-> usize` は戻り値の型、
-末尾の `text.len()` はセミコロンなしの式なので、その値を返す。
-`len()` が返すのはバイト数であり、日本語の文字数を数える関数として説明しない。
+`text: &str` declares a shared reference to a string slice as the parameter type. `&name` is an expression borrowing
+`name`; here a conversion from `&String` to `&str` applies. The function only borrows for reading, so `name` remains
+usable afterward. `-> usize` is the return type. The final expression `text.len()` has no semicolon and supplies
+the return value. `len()` counts bytes, not Japanese characters or characters in general.
 
-次は所有権を移すため、最後の行でE0382になる意図した失敗例。
+The next example intentionally moves ownership and fails with E0382 at the final line.
 
 ```compile_fail,E0382
 fn consume(text: String) -> usize {
@@ -70,10 +70,10 @@ let length = consume(name);
 println!("{name}: {length}");
 ```
 
-借用が常に正解なのではない。関数側が値を保持するなど、所有する必要がある場合は値渡しにも理由がある。
-`clone()` を選ぶなら、元の値と別に所有する必要と複製の費用を説明する。
+Borrowing is not always the correct choice. Passing by value can be appropriate when the receiving code needs ownership,
+such as to retain the value. If choosing `clone()`, explain why separate ownership is needed and what duplication costs.
 
-## `?` の失敗時の戻り先
+## Where `?` returns on failure
 
 ```rust
 use std::num::ParseIntError;
@@ -88,14 +88,13 @@ assert!(parse_count("twelve").is_err());
 assert!(parse_count("-1").is_err());
 ```
 
-`Result<u32, ParseIntError>` は成功時の `u32` と失敗時の `ParseIntError` を区別する型。
-`::<u32>` は文字列をどの型へ変換するかを指定する。`?` はこの `Result` が `Ok` なら中の値を取り出し、
-`Err` なら `parse_count` からエラーを返す。その場合は最後の `Ok(count)` に進まない。
-この例は変換前後でエラー型が同じ。他の型へ伝える場合は変換の条件も必要になる。
-[`?`の規則](https://doc.rust-lang.org/reference/expressions/operator-expr.html#the-try-propagation-expression)は、
-使う型や囲んでいる関数・クロージャに即して確認する。
+`Result<u32, ParseIntError>` distinguishes a successful `u32` from a parsing error. `::<u32>` specifies the target type
+for parsing. For this `Result`, `?` extracts the value from `Ok`; for `Err`, it returns an error from `parse_count`,
+without reaching `Ok(count)`. The error type is the same here; propagating a different type requires an applicable conversion.
+Check the [`?` rules](https://doc.rust-lang.org/reference/expressions/operator-expr.html#the-try-propagation-expression)
+in terms of the actual type and enclosing function or closure.
 
-## 実装を変えても必要な動作を保つ
+## Preserve required behavior across implementations
 
 ```rust
 fn count_positive_loop(values: &[i32]) -> usize {
@@ -118,8 +117,8 @@ for (input, expected) in [(&[-1, 0, 2, 3][..], 2), (&[][..], 0), (&[0][..], 0)] 
 }
 ```
 
-要求は「正の整数の個数」で、`0` は含まない。二つの実装が一致するだけでなく、要求から決めた期待値と比べる。
-`> 0` を `>= 0` に変える誤りは、`0` を含む例で見つかる。
-`iter()` の要素は `&i32`、`filter` の判定処理は要素への参照を受けるので `value` は `&&i32`。
-`**value` は二段の参照をたどる式になる。この説明がまだ重ければ、先にループ版で型と条件を追う。
-この有限個の例の成功を、あらゆる入力や副作用まで同等である証明とは扱わない。
+The requirement is the number of positive integers, excluding `0`. Compare each implementation with expectations
+from that requirement, not only with the other implementation. An input containing `0` detects changing `> 0` to `>= 0`.
+`iter()` yields `&i32`, and `filter` supplies a reference to each item, making `value` an `&&i32`.
+`**value` follows two references. If this is too much at once, first trace types and conditions in the loop version.
+Passing these finite examples is not proof of equivalence for all inputs and side effects.

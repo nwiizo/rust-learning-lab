@@ -1,94 +1,99 @@
-# プログラミング学習の研究と適用範囲
+# Programming learning research and its scope
 
-確認日：2026-09-26。学習方法の根拠や効果を説明するときに読む。
-研究で観察された結果と、このスキルで採用する応用を分ける。授業・教材の比較結果から、
-個々の方法の効果やRustでの長期的な習得を一律に保証しない。
-概要・抄録で確認した研究はその範囲にとどめ、詳細な効果量や因果関係を論じる場合は本文を読む。
+English | [日本語](learning-evidence_ja.md)
 
-## コードを読んで理解する
+Sources checked: 2026-09-26. Read when explaining evidence for learning methods or their effects.
+Separate reported findings from the applications adopted by this skill. Classroom or curriculum comparisons do not
+establish universal effects of individual techniques or long-term Rust mastery. Where only an abstract or summary
+was checked, stay within it; read the paper before discussing detailed effect sizes or causal claims.
 
-### 明示的なコード追跡
+## Reading and understanding code
 
-[Xie, Nelson & Ko, 2018](https://faculty.washington.edu/ajko/papers/Xie2018TracingStrategies.pdf) は、
-大学の初学者24人を対象に、Javaの実行を順に追って途中の状態を表へ書く方法を比較した。
-追跡問題の成績改善が報告されている。小規模で短い追跡課題の結果であり、一般的な実装力の保証ではない。
-本スキルでは、状態を追えない場合に表を使い、どの時点から予想と違ったかを確認する。
+### Explicit tracing
 
-### 予測から学ぶ
+[Xie, Nelson & Ko, 2018](https://faculty.washington.edu/ajko/papers/Xie2018TracingStrategies.pdf) compared instruction
+in step-by-step Java tracing with external state tables among 24 university novices. Tracing performance improved.
+This small, short-task study does not establish general implementation ability. This skill uses tables when state
+is difficult to follow, locating the point where predictions diverge.
 
-[Prediction versus production for teaching computer programming, 2024](https://www.sciencedirect.com/science/article/pii/S0959475223001408) は、
-プログラミング経験のない大学生121人を無作為に割り当て、Rの出力を予測する学習と説明後にコードを書く学習を比較した。
-予測群で学習評価などの改善が報告されている。初期の導入課題の結果を、実装練習が不要という主張へ広げない。
-本スキルでは対話練習の選択肢とし、通常の質問への回答を予測問題で遮らない。
+### Learning through prediction
 
-### 読解から変更・自作へ進む
+[Prediction versus production for teaching computer programming, 2024](https://www.sciencedirect.com/science/article/pii/S0959475223001408)
+randomly assigned 121 university students without programming experience to predicting R output or writing code after
+explanation. The prediction group improved on learning assessments and other measures. Introductory-task results do not
+imply that writing practice is unnecessary. This skill treats prediction as an interactive-practice option, not a barrier
+to answering ordinary questions.
 
-[Sentance, Waite & Kallia, 2019](https://eprints.gla.ac.uk/229013/) のPRIMMは、予測・実行・調査・変更・自作を組み合わせる。
-13校の11〜14歳493人を対象とする8〜12週間の比較で、事後テストの改善が報告された。
-授業全体の取り組みであり、一人の成人学習者への効果や、各段階単独の効果を示すものではない。
-本スキルでは、コードを読めた後に変更・自作へつなぐ選択肢として使い、固定の五段階にはしない。
+### From reading to modification and creation
 
-### Rustの所有権の説明
+PRIMM in [Sentance, Waite & Kallia, 2019](https://eprints.gla.ac.uk/229013/) combines prediction, running, investigation,
+modification, and making. A comparison involving 493 learners aged 11–14 across 13 schools over 8–12 weeks reported
+better post-test performance. This evaluates a classroom approach, not an individual adult learner or each step in isolation.
+This skill uses it as an option for connecting reading to changes and independent creation, not a compulsory five-step routine.
 
-[Crichton, Gray & Krishnamurthi, 2023](https://arxiv.org/abs/2309.04134) は、実行時の状態と静的な制約を結び付けるため、
-読み取り・書き込み・所有に関する操作の許可を使うモデルと可視化を教材へ組み込んだ。
-読者342人の初期導入評価で所有権理解テストの改善が報告された。長期の開発能力全般を測った結果ではない。
-本スキルでは、値や参照の状態と、各地点で許される操作を対応づける。教材のためだけに可視化ツールを導入しない。
+### Explaining Rust ownership
 
-## 書く・直す力を支える
+[Crichton, Gray & Krishnamurthi, 2023](https://arxiv.org/abs/2309.04134) incorporated a permissions model and
+visualizations into learning material to connect runtime state with static constraints through permitted reading,
+writing, and ownership-related operations. An initial deployment evaluation with 342 readers reported improved
+ownership assessment performance; it did not measure long-term development ability in general. This skill connects
+values and references to permitted operations at each point, without requiring a visualization tool just for teaching.
 
-### 小目標を付けた完成例
+## Supporting writing and debugging
 
-[Margulieux, Morrison & Decker, 2020](https://link.springer.com/article/10.1186/s40594-020-00222-7) は、
-大学の入門プログラミング授業で、処理の小目標を明記した完成例を学期にわたって評価した。
-小テスト成績や不合格・離脱の指標に改善が見られた一方、試験の平均成績は有意に改善しなかった。
-本スキルでは「何をする行か」に加えて「何を達成するまとまりか」を示し、そのまとまりを別の問題へ使う練習を選ぶ。
+### Worked examples with subgoal labels
 
-### 並べ替え問題による実装の補助
+[Margulieux, Morrison & Decker, 2020](https://link.springer.com/article/10.1186/s40594-020-00222-7) evaluated
+subgoal-labeled worked examples over a university introductory programming course. Quiz performance and failure or
+withdrawal indicators improved, but average exam performance did not improve significantly. This skill explains both
+what a line does and what a group achieves, then selects practice applying that group to another problem.
 
-[Hou, Ericson & Wang, 2023](https://arxiv.org/abs/2311.18115) は、大学生89人を無作為に割り当て、
-コードを書く際に並べ替え問題（Parsons問題）を補助として使う条件を調べた。
-自己効力感の低い参加者の練習成績・効率などで改善が見られ、利用のしやすさには事前知識も関係した。
-全員への優位性や長期の自力実装能力を保証しない。本スキルでは補助として選び、選択肢なしの小さな実装でも確認する。
+### Reordering as writing support
 
-### デバッグの明示的な指導
+[Hou, Ericson & Wang, 2023](https://arxiv.org/abs/2311.18115) randomly assigned 89 university students to conditions
+examining Parsons problems as support for code writing. Practice performance and efficiency improved for participants
+with lower self-efficacy; prior knowledge also affected how accessible the support was. This does not establish superiority
+for everyone or long-term independent writing ability. This skill uses reordering selectively, followed by a small task without choices.
 
-[Decoding Debugging Instruction, 2024](https://doi.org/10.1145/3690652) は、2010〜2022年の介入研究43件を整理した。
-正確さや学習への有望な結果がある一方、教えた体系的な手順が継続して採用されるとは限らず、追試も少ない。
-本スキルでは観察・仮説・確認を見える形にし、実際の修正でその考え方を使えたかを見る。
-手順を説明しただけでデバッグ能力が身に付いたとは判定しない。
+### Explicit debugging instruction
 
-### 自動フィードバックの限界
+[Decoding Debugging Instruction, 2024](https://doi.org/10.1145/3690652) reviewed 43 intervention studies from 2010–2022.
+Results for accuracy and learning were promising, but learners did not consistently adopt the systematic strategies they
+were taught, and replications were limited. This skill makes observation, hypothesis, and checking visible and looks for
+actual use during a repair. Explaining a procedure alone does not establish debugging ability.
 
-[Messer et al., 2024（著者公開稿）](https://arxiv.org/abs/2306.11722) は、2017〜2021年の研究121件を整理した。
-多くのツールは正しさの評価を中心とし、フィードバックもテスト結果や期待値との違いにとどまりやすかった。
-特定のヒント形式やAIの優位性を確立した比較ではない。本スキルでは、結果に加えて原因へ近づく次の操作を示し、
-課題が通ったことと学習者の理解を区別する。
+### Limits of automated feedback
 
-## AIを使う作業と自力での理解
+[Messer et al., 2024 (author manuscript)](https://arxiv.org/abs/2306.11722) reviewed 121 studies from 2017–2021.
+Many tools emphasized correctness, with feedback often limited to tests and differences from expected results.
+This was not a comparison establishing the superiority of a particular hint format or AI. This skill provides a next
+operation toward the cause as well as the result, separating task success from learner understanding.
 
-### コード生成を使った初学者の実装
+## AI-assisted work and independent understanding
 
-[Kazemitabaar et al., 2023](https://arxiv.org/abs/2302.07427) は、10〜17歳の初学者69人を対象に、
-Pythonの作成課題と、その後の手作業による変更課題を比較した。生成支援を使う群は作成課題の成績が上がり、
-変更課題の成績低下は見られなかった。一週間後の評価では群全体の差は統計的に有意ではなかった。
-特定の教材・年齢・当時のモデルでの結果であり、生成支援が長期の学習を改善するとの一般化はしない。
-本スキルではAI利用を一律に禁じず、完成したコードを別条件で変更・説明する場面を分ける。
+### Novices using code generation
 
-### 新しいライブラリを学ぶ際の支援
+[Kazemitabaar et al., 2023](https://arxiv.org/abs/2302.07427) compared Python authoring tasks followed by manual
+modification tasks among 69 novices aged 10–17. Generation assistance improved authoring performance without a decrease
+in modification performance. The overall group difference on a one-week follow-up was not statistically significant.
+The setting, ages, materials, and model were specific; do not generalize this into a claim that generation improves
+long-term learning. This skill does not ban AI categorically; it separates getting working code from changing and
+explaining it under other conditions.
 
-[Shen & Tamkin, 2026](https://www.anthropic.com/research/AI-assistance-coding-skills) は、
-未知のPythonライブラリを学ぶ開発者を無作為に割り当てた実験で、AI支援群の直後の理解テストが低く、
-作業時間の差は有意でなかったと報告した。概念を尋ねるなどの利用方法と高得点の関連も観察されたが、
-利用方法自体を無作為に割り当てた比較ではなく、その方法の因果効果は示していない。
-小規模・短期の評価であり、Rustや現在の各製品、長期の能力低下へそのまま広げない。
-本スキルでは、AIの出力を読んだ時間や完成量から理解を推定せず、支援なしの予測・説明・修正を別に確かめる。
+### Assistance while learning a new library
 
-二つの研究は対象・課題・評価が異なる。都合のよい側だけを採用せず、AI利用の有無だけで学習効果を断定しない。
-具体的な練習への応用は[判断と検証を学ぶ](engineering-practice.md)にまとめる。
+[Shen & Tamkin, 2026](https://www.anthropic.com/research/AI-assistance-coding-skills) reported that developers randomly
+assigned to AI assistance while learning an unfamiliar Python library scored lower on an immediate understanding test;
+the time difference was not significant. Usage patterns such as conceptual questions were associated with higher scores,
+but those patterns were not randomized and their causal effects were not established. The small, short-term study does
+not directly establish effects on Rust, every current product, or long-term skill decline. This skill does not infer
+understanding from code completed or time spent reading AI output; it checks unaided prediction, explanation, and repair separately.
 
-## 定着についての補助的な根拠
+These studies differ in participants, tasks, and assessments. Do not select only the convenient result or infer learning
+effects from AI use alone. See [Engineering practice](engineering-practice.md) for applications to exercises.
 
-想起と間隔を置いた復習には一般的な記憶研究も参照するが、プログラミング技能の直接検証とは分ける。
-対象と限界、復習方法への応用は[学習支援の選び方](learning-design.md#思い出す練習と復習)に記載している。
-読む・変更する・自作する・直す各技能について、支援を減らした別の課題でも確認する。
+## Supporting evidence on retention
+
+General memory research informs retrieval and spacing, separately from direct programming-skill evidence.
+Participants, limitations, and applications are described in [Learning design](learning-design.md#retrieval-and-spaced-revision).
+Assess reading, changing, creating, and debugging on another task with reduced support.

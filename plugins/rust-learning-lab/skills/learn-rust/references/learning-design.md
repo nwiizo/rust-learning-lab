@@ -1,115 +1,113 @@
-# Rustの学習支援の選び方
+# Choosing learning support for Rust
 
-理解が進まない相談、練習・復習・デバッグの学習・継続学習の依頼で使う。全項目を一回の回答へ詰め込まない。
-コード読解、問題の分解、実装、テスト、デバッグ、定着を別々に確かめ、必要な支援を選ぶ。
-以下は教育研究を参考にしたRust向けの応用方針であり、この組み合わせ自体の効果を検証したものではない。
-研究の結果と限界を説明する場合は、[研究と適用範囲](learning-evidence.md) を参照する。
+English | [日本語](learning-design_ja.md)
 
-## つまずきに合う支援を選ぶ
+Use for difficulty learning, practice, revision, learning to debug, or ongoing study. Do not pack every method into one answer.
+Assess reading, decomposition, implementation, testing, debugging, and retention separately, then choose useful support.
+These are applications to Rust informed by education research; this combination itself has not been evaluated.
+For research findings and limitations, see [Research and scope](learning-evidence.md).
 
-次の表は説明方法を選ぶための観察項目であり、学習者の能力を分類する診断ではない。
+## Match support to the difficulty
 
-| 観察できるつまずき | 最初に試す支援 | Rustでの具体例 |
+These observations help choose explanations; they are not a classification of a learner's ability.
+
+| Observed difficulty | First support to try | Rust example |
 |---|---|---|
-| 記号や用語の意味が分からない | 短い定義と最小例を隣に置く | `&str` の `&` と、式中の `&value` を区別する |
-| 呼び出し先や省略された型が分からない | 定義・型・引数の対応を見える位置に出す | `fold` の初期値とクロージャの引数・戻り値を対応づける |
-| 各行は分かるが結果を追えない | 状態の変化を外に書き出す | 各反復の累積値と現在の要素を表にする |
-| 結果の予想に一貫した誤りがある | 成立する例と成立しない例を比べる | 値渡し後の再利用を `i32` と `String` で比べる |
-| 読めるが書き始められない | 入出力の例、小目標、部分的な実装を示す | 「入力を調べる」「必要な要素を選ぶ」「結果を返す」に分ける |
+| Unfamiliar notation or terms | Put a short definition next to a minimal example | Distinguish the `&` in `&str` from the expression `&value` |
+| Unknown callee or inferred types | Show definitions, types, and argument mappings together | Map `fold`'s initial value to closure parameters and return value |
+| Understands lines but cannot trace results | Write state changes down | Tabulate each iteration's accumulator and current item |
+| Consistent prediction error | Compare successful and unsuccessful cases | Contrast reusing `i32` and `String` after passing them by value |
+| Can read but cannot start writing | Supply input/output examples, subgoals, and partial implementation | Separate examining input, selecting elements, and returning a result |
 
-複数が重なるなら、先へ進むのに必要な前提から補う。単なる書き間違いを概念の誤解と決めつけない。
-ユーザーの説明やコードから判断できる範囲で始め、答えを左右する不明点だけ尋ねる。
+When difficulties overlap, supply the prerequisite needed to proceed. Do not assume a typo reveals a conceptual error.
+Start with what the user's explanation and code show; ask only about unknowns that change the answer.
 
-## 読むときの負担を減らす
+## Reduce the burden of reading
 
-- 学ぶ対象を一つの到達点で表す。たとえば「この呼び出し後に元の変数を使える理由を説明できる」。
-  基礎を補う際も、その到達点へ戻る。構文の質問から無関係な設計・最適化へ広げない。
-  未知の構文は、読み方だけでなく何を表し、なぜ必要かを例に結び付ける。背景を説明するために未知の概念を積み上げない。
-- 最初は同じ小さな入力・変数名・処理を使い、説明したい条件だけ変える。
-  一つの例にジェネリクス、非同期処理、独自トレイトなどの新要素を重ねない。
-- コードを意味のまとまりで読む練習をする。まず記号や式を解き、次に「絞り込み」「変換」「集計」などの役割へまとめる。
-  `acc` や `item` は「累積値」「現在の要素」と結び付けるが、名前からの推測は実装で確認する。
-  完成例には処理の小目標を付け、別の入力でも使う判断と、その例だけの値を分ける。各行の翻訳だけで終えない。
-- 頭の中で状態を保持しづらい場合は、必要な列だけの状態表を使う。値の追跡には「処理・前の値・後の値」、
-  所有権には「変数・型・値の所有者・参照先・その後使えるか」などを選ぶ。
-  コンパイル時の制約と実行時の値の変化を同じ現象として説明しない。
-  所有権で混乱する場合は、値がどこにあるかと、各箇所で読み取り・書き込み・移動が許されるかを対応づける。
-  借用検査で拒否される例すべてに、実行時の不具合が必ずあると説明しない。
-- 長い式は読みやすく展開し、元の式との対応を保つ。所有権を箱などにたとえる場合は、
-  比喩が表せる範囲を添え、正確な型やコンパイラの規則へ戻す。
+- Express one target capability, such as explaining why a variable remains usable after a call. Return to that target
+  after filling prerequisites. Do not turn a syntax question into unrelated architecture or optimization. Connect unfamiliar
+  syntax to what it represents and why it is needed, without piling up new concepts to explain the background.
+- Keep small inputs, names, and operations stable initially, changing only the condition being taught.
+  Avoid combining generics, async code, and custom traits as simultaneous new concepts.
+- Read meaningful groups: unpack symbols and expressions, then name roles such as filtering, transformation, or aggregation.
+  Connect `acc` and `item` to accumulator and current item, but verify names against behavior. Label subgoals in worked
+  examples and distinguish reusable decisions from incidental values. Do not stop at translating individual lines.
+- Externalize difficult state using only useful columns: operation/before/after for values, or variable/type/owner/referent/later
+  usability for ownership. Separate compile-time constraints from runtime changes. Connect where values reside to permitted
+  reads, writes, and moves. Do not claim every borrow-checker rejection would necessarily produce a runtime bug.
+- Expand long expressions while preserving correspondence. For metaphors such as ownership as boxes, state their limits
+  and return to actual types and compiler rules.
 
-## 解説から自力で扱う練習へ進む
+## Move from explanations to independent practice
 
-通常の質問には結論と説明を返す。練習が役立つときは短い任意の問いを添える程度にし、
-解答を別段落や折りたたみに分けて自分で考える余地を作る。回答を待つ進め方は対話練習の依頼で選ぶ。
-「ヒントだけ」「答えも見たい」などの希望を優先する。
+Answer ordinary questions with a conclusion and explanation. If practice helps, add a short optional question and
+separate its answer into another paragraph or a disclosure block. Wait for answers only when interactive practice is requested.
+Honor preferences such as “hints only” or “show the answer too.”
 
-- **予測する**：実行前に出力・型・コンパイル可否のいずれかを予測し、理由を述べる。
-  コンパイルできないコードに架空の実行結果を付けず、エラーになる箇所と理由を確認する。
-  その後に実行・調査・変更・自作へ進む方法も使えるが、毎回すべてを行う必要はない。
-- **説明する**：完成例の一行について「この値はどこから来て、どこへ渡るか」を自分の言葉で説明する。
-  用語を暗唱できることと、そのコードに当てはめられることを区別する。
-- **補う**：自力で全部書くのが難しければ、一部を空欄にした例や、短い行を並べ替える問題にする。
-  必要な前提と期待する動作を示し、複数の正しい解き方があれば認める。
-  並べ替えの成功は自力で書ける証拠にはしない。次は選択肢やひな形を減らし、小さな変更を自分で書く。
-- **変える**：元の例が追えたら、入力や条件を少し変えて結果を説明する。
-  構文の暗記だけで終わらず、なぜ使えるか・どこで使えなくなるかを確かめる。
-- **直す**：予測が外れた最初の箇所を特定し、期待した型と実際の型などを並べる。
-  正しい結果とその理由を返し、修正した考え方が別の小さな例にも使えるか確認する。
+- **Predict:** before execution, predict output, a type, or whether compilation succeeds, and give a reason. Do not invent
+  runtime results for non-compiling code; locate and explain the error. Running, investigating, modifying, and creating can
+  follow, but every step is not mandatory every time.
+- **Explain:** describe in your own words where a value comes from and where it goes in one line of a worked example.
+  Distinguish reciting terminology from applying it to the code.
+- **Complete:** if writing everything is too difficult, use blanks or a short line-reordering task. Provide prerequisites and
+  expected behavior; allow multiple valid solutions. Success at reordering does not prove independent writing ability.
+  Next reduce choices or scaffolding and ask for a small independent change.
+- **Modify:** after tracing an example, vary an input or condition and explain the result. Check why an approach applies
+  and where it stops applying, rather than only memorizing syntax.
+- **Repair:** locate the first failed prediction and compare expected and actual types or values. Give the correct result
+  and reasoning, then check whether the revised reasoning applies to another small example.
 
-完成例、部分的な補完、自力での変更は難しさを調整する選択肢であり、毎回の固定手順ではない。
-つまずいたらヒントを具体化し、できたら支援を減らす。問題数を増やすことを進歩の代わりにしない。
-学習者の性格・才能を評価せず、その回答から確認できる理解と未確認の点を返す。
+Worked examples, partial completion, and independent changes are adjustable support, not a fixed progression.
+Make hints more concrete when stuck and reduce support when successful. More questions are not a substitute for progress.
+Report demonstrated understanding and unknowns, not judgments about personality or talent.
 
-## 問題を分解して書く
+## Decompose a problem and write code
 
-- 書き出せない場合は、具体的な入力と期待する出力を置き、手でどう求めるかを短く説明する。
-  必要な値・分岐・繰り返しを特定し、小目標をコードに対応づける。アルゴリズムと未知の構文を同時に考えさせすぎない。
-- 最初は一つの動作を実装し、小さな入力で確かめる。動いたら空の入力や境界値など、その処理に関係する条件へ広げる。
-  テストでは実行前に期待値を決め、出力を見てから正解を合わせない。テスト駆動の固定手順や大量のテスト作成は課さない。
-- 自作課題は、ユーザーが作りたいものの小さな機能へつなげる。たとえば集計処理を学ぶなら、
-  既知の入力から集計結果を返すところまでに絞る。学ぶ必要のない環境構築・依存追加・UI実装を同時に増やさない。
-- 例題が解けた後は、名前や数値だけでなく条件を変える。「合計」を「条件に合う値の合計」へ変えるなど、
-  再利用できる部分と新しく考える部分を説明する。同じ答えの再現と、新しい問題への応用を区別する。
+- If starting is difficult, establish concrete input and expected output, then describe how to solve it by hand.
+  Identify values, branches, and repetition and map subgoals to code. Avoid requiring too much algorithm design and unfamiliar syntax at once.
+- Implement one behavior and check a small input. Then extend to relevant empty or boundary cases. Establish expected
+  results before execution rather than adapting the answer to observed output. Do not impose a fixed test-first ritual or a large test suite.
+- Connect independent work to a small part of something the user wants to build. For aggregation, limit the task to producing
+  a result from known input; do not add unrelated setup, dependencies, or UI work.
+- After success, change conditions rather than just names or numbers: for example, replace a total with the total of qualifying
+  values. Explain what can be reused and what needs new reasoning. Separate reproducing an answer from transfer to a new problem.
 
-## デバッグとフィードバックを学ぶ
+## Learn debugging and feedback
 
-- コンパイルエラー、実行時の失敗、期待と違う結果を分け、再現する入力と期待値を確認する。
-  指摘された行だけでなく、その値や型が決まった箇所へ戻る。ツールの操作と原因の推論を分けて教える。
-- 「観察したこと」「原因の仮説」「仮説を確かめる操作」を対応づける。
-  たとえば累積値を疑うなら反復ごとの値を観察し、予想と異なる最初の箇所を探す。根拠なく複数箇所を変えない。
-- 学習者の試みに対して、できている部分、最初の食い違い、次に調べる一点を返す。
-  ヒントは着目点から具体的な操作へ調整し、同じ失敗が続くなら説明例へ戻る。正解を求められたら出し惜しみしない。
-- 修正後は失敗した例を再確認し、関係する別の入力でも意図した動作か確かめる。
-  テスト通過やコンパイラの提案の採用だけで終えず、原因と修正理由を結び付ける。
-  AIが修正した場合は、その動作の検証と学習者が自力で修正できるかの確認を別に扱う。
+- Separate compiler errors, runtime failures, and unexpected results. Establish reproducing input and expected behavior.
+  Trace back from the reported line to where the value or type was determined. Teach tool operation separately from causal reasoning.
+- Connect observation, hypothesis, and the operation that tests it. To investigate accumulation, inspect values at each
+  iteration and locate the first divergence. Do not change unrelated locations without evidence.
+- Respond to an attempt with what works, the first mismatch, and one next investigation. Adjust hints from where to look
+  toward concrete operations; return to an explained example after repeated difficulty. Do not withhold a requested answer.
+- Recheck the failing example after fixing it and try relevant additional input. Connect cause and correction rather than
+  stopping at passing tests or accepting a compiler suggestion. If AI applied the fix, assess its behavior separately from
+  whether the learner can repair it independently.
 
-## 思い出す練習と復習
+## Retrieval and spaced revision
 
-文章教材の実験では、直後の再読による成績や自信と、時間を置いた想起成績は一致しなかった。
-この知見を参考に、説明を見て納得するだけでなく、見ずに思い出す機会を作る。
-Rustの技能全体に同じ効果があると断定しない。
-出典：[Roediger & Karpicke, 2006](https://journals.sagepub.com/doi/10.1111/j.1467-9280.2006.01693.x)。
+Experiments with prose materials found that immediate performance or confidence after rereading did not align with
+later recall. Use this as a reason to offer retrieval without the explanation, rather than relying on immediate agreement.
+Do not claim the same effect for every Rust skill.
+Source: [Roediger & Karpicke, 2006](https://journals.sagepub.com/doi/10.1111/j.1467-9280.2006.01693.x).
 
-- 問いは単語の意味だけでなく、判断と理由を引き出す。「借用とは何か」だけでなく、
-  「この関数呼び出し後に元の値を使えるか。どの型から判断したか」と問う。
-- 復習カードが必要なら、一枚に一つの判断を置き、裏に短い答え・理由・適用条件を付ける。
-  決まり文句やコード全体の丸暗記を求めず、頻出の構文と判断の手がかりを残す。
-- 継続学習では、次の機会に説明を見ずに解き、できれば入力や文脈を変える。
-  たとえば翌日・数日後・翌週は開始案であり、正答状況と学ぶ目的に応じて調整する。
-  特定の復習間隔を万人に最適とは扱わず、通知や予定の自動作成も行わない。
-- 正答だけでなく根拠を確認する。自信と結果が食い違ったら、その判断を支えた前提へ戻る。
-  同じ問題を直後に解けたことから、長期間の定着や別の問題への応用を保証しない。
-  返答がない場合や解答を見て言い直しただけの場合は、自力で解けたとは記録しない。
+- Ask for decisions and reasons, not only definitions: instead of just “What is borrowing?”, ask whether the original value
+  remains usable after a call and which type supports that conclusion.
+- If flashcards are useful, put one decision on each, with a short answer, reason, and applicability condition on the back.
+  Keep recurring syntax and decision cues, not slogans or whole-program memorization.
+- In ongoing study, revisit a task later without the explanation, ideally with changed input or context. The next day,
+  a few days later, and a week later are starting suggestions, adjustable to performance and purpose, not a universal optimum.
+  Do not automatically create reminders or scheduled events.
+- Check reasons as well as correctness. If confidence and results differ, revisit assumptions. Immediate repetition does
+  not guarantee lasting retention or transfer. No response, or paraphrasing after seeing the answer, is not independent success.
 
-間隔を置く研究では、保持したい期間によって有効な学習間隔が変わっている。
-上の復習案はRust向けに検証済みの固定日程ではない。
-出典：[Cepeda et al., 2008](https://pubmed.ncbi.nlm.nih.gov/19076480/)。
+Spacing research found that useful intervals depend on the desired retention period. The schedule above is not a fixed
+Rust-validated plan. Source: [Cepeda et al., 2008](https://pubmed.ncbi.nlm.nih.gov/19076480/).
 
-## 学習を再開しやすくする
+## Make resuming easier
 
-継続学習や中断時には、必要に応じて「扱った判断」「自力で説明できたこと」「次に確かめる一点」を短く残す。
-たとえば「`&String` を渡す例は説明できた。次は `String` をそのまま渡す場合を予測する」と書く。
-単に説明を提示しただけなら「説明済み」とし、「習得済み」に置き換えない。
-会話中の記録を基本とし、ファイル保存や学習履歴の蓄積は依頼された場合に行う。
-前提や失敗理由も残す必要がある場合は、[判断と検証を学ぶ](engineering-practice.md#再開に必要な情報を残す) を使う。
+When useful in ongoing study or at a break, leave a brief note of the decision covered, what the learner independently
+explained, and one next check. For example: “Explained the `&String` case; next predict passing `String` by value.”
+If only an explanation was provided, record it as explained, not mastered. Keep notes in the conversation by default;
+write files or accumulate learning history only when requested. For assumptions and failed approaches that matter to
+resuming, see [Engineering practice](engineering-practice.md#leave-enough-information-to-resume).

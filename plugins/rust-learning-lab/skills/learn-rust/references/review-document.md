@@ -1,57 +1,57 @@
-# 読み返せるレビュー文書
+# Review documents worth revisiting
 
-リポジトリの変更を教材にする詳しいレビュー、設計の意図を説明する依頼、文書として残す依頼で使う。
-チャットの指摘を単に保存するだけでなく、利用者から見える変化と、その変化を実現する値の流れを結び付ける。
-文書化はソースの修正、コミット、pushの許可を意味しない。
+English | [日本語](review-document_ja.md)
 
-## 保存先と対象
+Use for detailed reviews that teach from repository changes, explanations of design intent, or requests for a document.
+Connect user-visible changes to the flow of values that implements them, rather than merely saving chat findings.
+Writing a review document does not authorize source changes, commits, or pushes.
 
-指定の保存先を優先し、指定がなければ既存の文書配置に合わせて
-`docs/rust-learning-review.md` または対象が分かる `docs/<topic>-learning-review.md` を選ぶ。
-チャットだけ、読み取り専用、文書を追加しないという指示ではファイルを書かない。
-書き込みができなければ本文を会話で渡し、保存したとは言わない。
+## Destination and scope
 
-同じ目的の文書が既にあれば内容と変更状態を読み、今回の対象へ更新する。
-別の変更についての記録やユーザーの編集中の文章は上書きせず、別名を選ぶ。
-タイトルには何の変更・どの設計判断を理解する文書かを書き、スキル名だけのタイトルにしない。
-対象のファイル・差分・版を冒頭か末尾に残す。未コミットの差分はその旨を示す。
-存在しないPR番号や、まだ作っていないリリースを文書の識別情報に使わない。
+Honor the requested path. Otherwise follow existing documentation conventions with `docs/rust-learning-review.md`
+or a descriptive path such as `docs/<topic>-learning-review.md`. Do not write files for chat-only, read-only,
+or no-documentation requests. If writing is unavailable, provide the text in conversation without claiming it was saved.
 
-## 読む順序を設計する
+If a document for the same purpose exists, read its contents and modification state before updating it.
+Do not overwrite a record of another change or the user's in-progress writing; choose another name instead.
+Make the title describe the change or design decision, rather than only the skill name. Record the relevant files,
+diff, or version near the beginning or end. Label uncommitted changes as such. Do not invent PR numbers or identify
+a release that has not been created.
 
-次の流れを出発点にし、対象に必要な節を選ぶ。すべての見出しを埋める必要はない。
+## Organize the reading path
 
-1. **目的とレビュー結果**：利用者から見た変化と重要な指摘。問題があれば教材の説明より前に示す。
-2. **全体の流れ**：入力から出力まで、値を作る・選ぶ・渡す・借りる・返す順で関連箇所をつなぐ。
-3. **判断と構文の読み解き**：実際のコードを使い、下の観点から理解に必要なものを説明する。
-4. **別条件で確かめる**：学習が目的なら、短い任意の問いと答え・根拠を分けて置く。
-5. **照合先と検証範囲**：実装へのリンク、実行した確認、その結果、未確認の点を残す。
+Use this sequence as a starting point, selecting the sections the subject needs rather than filling every heading.
 
-各コード箇所では「何を区別・防止・実現したいか」を先に置く。
-それから関数定義と呼び出しを対応づけ、記号、引数、戻り値を読み下す。
-引数の順番は宣言との対応とAPI設計を分け、ライフタイムなどの型の情報を実行時の引数と混同しない。
-型推論、暗黙の借用、参照の段数を必要な位置で補う。
-表は、呼び出し側→定義側、処理前→処理後、成功→失敗など、比較するものがあるときに使う。
+1. **Purpose and findings:** user-visible changes and important findings. Put problems before the teaching material.
+2. **Overall flow:** connect code by how values are created, selected, passed, borrowed, and returned.
+3. **Decisions and syntax:** use actual code and the relevant explanation perspectives below.
+4. **Try another condition:** when learning is the goal, separate a short optional question from its answer and reasoning.
+5. **Sources and verification scope:** implementation links, checks actually run, results, and unverified points.
 
-構文の解説を目的から切り離さない。たとえば `&[T]` は読み方に加え、
-「呼び出し側の値を残したい」「ここでは変更しない」という判断へ結び付ける。
-別の書き方との比較では、どの条件なら選ぶかも示す。長い文書でも同じ基本説明は繰り返さず参照する。
+For each code location, explain what it needs to distinguish, prevent, or accomplish. Then connect declaration
+and call and read the symbols, parameters, and return value. Separate declared argument order from API design;
+do not confuse type information such as lifetimes with runtime arguments. Expose inference, implicit borrowing,
+and reference depth where needed. Use tables when there is an actual comparison: caller to parameter, before to after,
+or success to failure.
 
-## 例を信頼できる形にする
+Keep syntax connected to purpose. Explain `&[T]` not just as notation but as a decision to preserve the caller's values
+and avoid modifying them here. When comparing alternatives, identify the conditions where each fits.
+In long documents, refer back rather than repeating basic explanations.
 
-実装へのリンクは保存先からの相対パスにし、リンク先の存在と記述内容を確認する。
-公開する文書へユーザーのホームディレクトリなどの絶対パスを埋め込まない。
-実装の抜粋、学習用に簡略化した実行例、意図したコンパイル失敗を区別する。
-簡略化で省いたエラー処理や外部依存があれば明記する。実装と同じ動作だという主張には根拠を付ける。
+## Make examples trustworthy
 
-Markdownを `rustdoc --test --edition <対象Edition> <保存先>` で確認する場合、
-単独実行できない抜粋は `rust,ignore`、意図した失敗は `compile_fail` とする。
-失敗した実行例を単に `ignore` に変えて通さない。抜粋だけの文書なら、実行による検証を行ったとは言わない。
-例を実行する前に、ファイル操作・ネットワーク・認証などの副作用も確認する。
+Use links relative to the saved document and verify their targets and described content. Do not embed private absolute
+paths such as a user's home directory in public documents. Distinguish implementation excerpts, simplified executable
+examples, and intentional compile failures. State omitted error handling or external dependencies. Support claims
+that a simplified version behaves identically to the implementation.
 
-実行結果にはコマンドと使用したツールチェーン、通過・失敗・対象外の範囲を添える。
-過去のアプリ全体のテスト結果と、今回実行した文書の確認を区別する。
-実装抜粋の目視確認だけなら「ソースと照合」と書き、実行していない動作まで検証済みとしない。
+For `rustdoc --test --edition <target-edition> <document>`, mark non-standalone excerpts as `rust,ignore` and intentional
+failures as `compile_fail`. Do not change a failing executable example to `ignore` merely to make the checks pass.
+An excerpts-only document has not been verified by execution. Before running examples, check for file, network,
+credential, or other side effects.
 
-文書の密度や説明のつなぎ方の参考が必要なら、[レビュー文書の短い例](review-example.md)を読む。
-例の見出しや長さを固定のテンプレートにはしない。完成後はチャットに重要な結果と文書リンクを返す。
+Record commands, toolchain, passes, failures, and exclusions. Separate past application test results from documentation
+checks run now. Say “checked against the source” for static inspection; do not imply execution of behavior that was not tested.
+
+When useful for explanation density and continuity, read the [short review example](review-example.md).
+Its headings and length are not a required template. Return important findings and the document link in chat when finished.

@@ -1,6 +1,6 @@
 {
   "name": "rust-learning-lab",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Learn and review Rust through syntax, design rationale, code tracing, practice, and debugging.",
   "author": {"name": "nwiizo", "url": "https://github.com/nwiizo"},
   "homepage": "https://github.com/nwiizo/rust-learning-lab#readme",

@@ -9,8 +9,8 @@ through arguments, types, ownership, and control flow, then practice making and 
 Reviews identify concrete problems and explain why a fix works. Detailed learning reviews can become
 Markdown documents you can revisit.
 
-One shared skill, `learn-rust`, serves both hosts. Its instructions are written in Japanese, but responses
-follow your requested language or the language of the conversation. Documents follow their requested
+One shared skill, `learn-rust`, serves both hosts. Its instructions and all eight references are available in
+English and Japanese. Responses follow your requested language or the language of the conversation. Documents follow their requested
 language or the repository's conventions. English code or error messages alone do not switch the response language.
 
 ## Install
@@ -64,8 +64,7 @@ and what you already understand when available.
 Detailed learning reviews of a repository produce a document such as `docs/rust-learning-review.md`
 by default. An explicit destination, “chat only,” or read-only instruction takes precedence.
 Reviewing does not authorize source edits; ask for fixes when you want them applied.
-See a [short example review document](plugins/rust-learning-lab/skills/learn-rust/references/review-example.md)
-(written in Japanese; generated reviews use the appropriate language).
+See a [short example review document](plugins/rust-learning-lab/skills/learn-rust/references/review-example.md).
 
 ## What it supports
 
@@ -83,7 +82,10 @@ for individual Rust learners. This plugin's learning effectiveness has not been 
 ## Develop and verify
 
 Both hosts use `plugins/rust-learning-lab/skills/learn-rust/`. Supporting references are read only when
-relevant. The plugin includes no MCP servers, hooks, or custom runtime. It does not independently collect
+relevant, in the language of the current explanation or document. Each English reference links to its `_ja.md`
+counterpart; Japanese references link back and use Japanese local references. Other response languages use English
+references as a fallback without changing the response language. Both translations are not loaded by default.
+The plugin includes no MCP servers, hooks, or custom runtime. It does not independently collect
 data; conversation handling and tool execution follow your host's settings.
 
 ```sh
@@ -94,8 +96,11 @@ claude plugin validate .
 claude plugin validate plugins/rust-learning-lab
 ```
 
-CI checks distribution metadata and executable Rust examples. The [conversation scenarios](docs/evaluation.md)
+Run the doctest commands for the `_ja.md` counterparts too. CI checks distribution metadata, bilingual file coverage,
+matching Rust code blocks, and executable Rust examples in both languages. The [conversation scenarios](docs/evaluation.md)
 are for manual evaluation; passing syntax checks and examples does not establish model behavior or learning outcomes.
-Keep the versions in both host manifests aligned, and update both READMEs when usage changes.
+Keep the versions in both host manifests aligned and update both languages when meaning changes.
+[Repository guidance](AGENTS.md), also loaded by Claude Code, records the language, review-document, verification,
+and publication workflow. See [the skill instructions](plugins/rust-learning-lab/skills/learn-rust/SKILL.md) for reference routing.
 
 MIT License. Linked papers and external resources retain their own terms.
