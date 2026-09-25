@@ -1,0 +1,26 @@
+name: Validate plugin
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check distribution metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          plugin=plugins/rust-learning-lab
+          jq -e '.name == "rust-learning-lab" and .skills == "./skills/" and (.interface.defaultPrompt | length <= 3)' "$plugin/.codex-plugin/plugin.json"
+          jq -e '.name == "rust-learning-lab" and .author.name == "nwiizo"' "$plugin/.claude-plugin/plugin.json"
+          diff <(jq -r '.name, .version' "$plugin/.codex-plugin/plugin.json") <(jq -r '.name, .version' "$plugin/.claude-plugin/plugin.json")
+          jq -e '.name == "rust-learning-lab" and .plugins[0].name == "rust-learning-lab" and .plugins[0].source.path == "./plugins/rust-learning-lab" and .plugins[0].policy.installation == "AVAILABLE" and .plugins[0].policy.authentication == "ON_INSTALL"' .agents/plugins/marketplace.json
+          jq -e '.name == "rust-learning-lab" and .plugins[0].name == "rust-learning-lab" and .plugins[0].source == "./plugins/rust-learning-lab"' .claude-plugin/marketplace.json
+          test -f "$plugin/skills/learn-rust/SKILL.md"
+      - name: Install Rust
+        run: rustup toolchain install stable --profile minimal
+      - name: Check executable learning examples
+        run: |
+          rustdoc +stable --test --edition 2024 plugins/rust-learning-lab/skills/learn-rust/references/worked-examples.md
+          rustdoc +stable --test --edition 2024 plugins/rust-learning-lab/skills/learn-rust/references/rust-2024.md

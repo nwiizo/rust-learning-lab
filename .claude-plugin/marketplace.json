@@ -1,0 +1,10 @@
+{
+  "name": "rust-learning-lab",
+  "owner": {"name": "nwiizo"},
+  "metadata": {"description": "Rust learning skills for coding assistants."},
+  "plugins": [{
+    "name": "rust-learning-lab",
+    "source": "./plugins/rust-learning-lab",
+    "description": "Understand Rust syntax and practice reading, writing, and debugging code."
+  }]
+}

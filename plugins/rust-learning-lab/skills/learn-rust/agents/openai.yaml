@@ -1,0 +1,4 @@
+interface:
+  display_name: "Learn Rust"
+  short_description: "Rustの構文と背景・型・所有権を読み解き、練習で理解と定着を支える"
+  default_prompt: "$learn-rust を使い、このRustコードを構文とその背景から説明し、引数・型・所有権の動きと、自分で確かめる方法を示してください。"

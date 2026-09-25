@@ -1,0 +1,23 @@
+{
+  "name": "rust-learning-lab",
+  "version": "0.1.0",
+  "description": "Learn Rust through syntax, design rationale, code tracing, practice, and debugging.",
+  "author": {
+    "name": "nwiizo",
+    "url": "https://github.com/nwiizo"
+  },
+  "skills": "./skills/",
+  "repository": "https://github.com/nwiizo/rust-learning-lab",
+  "homepage": "https://github.com/nwiizo/rust-learning-lab#readme",
+  "license": "MIT",
+  "keywords": ["rust", "learning", "syntax", "debugging"],
+  "interface": {
+    "displayName": "Rust Learning Lab",
+    "shortDescription": "Understand Rust. Practice reasoning about code.",
+    "longDescription": "Explain Rust syntax and its purpose, trace types and ownership, and build independent skills through focused practice and verification.",
+    "developerName": "nwiizo",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": ["Explain this Rust code from syntax to purpose.", "Show how arguments, types, and ownership move.", "Help me debug this Rust code and understand the fix."]
+  }
+}
