@@ -1,19 +1,23 @@
 # Rust Learning Lab
 
-**構文の意味から、自分で確かめる力まで。**
+English | [日本語](README_ja.md)
 
-Rustのコードを、記号の読み方・引数の対応・型と所有権・その仕組みが必要な理由から説明する、
-Codex / Claude Code向けの学習支援プラグインです。読むだけで終わらず、小さな変更・実装・デバッグへつなげます。
-指示は日本語で記述していますが、回答にはユーザーの言語を使います。
+**Understand the syntax. Explain the decisions. Verify the behavior.**
 
-Rust learning support for Codex and Claude Code: understand syntax and its purpose, then practice tracing,
-changing, and verifying code. One shared skill, `learn-rust`, serves both hosts.
+A learning and code review plugin for Codex and Claude Code. Read Rust from syntax and design rationale
+through arguments, types, ownership, and control flow, then practice making and checking small changes.
+Reviews identify concrete problems and explain why a fix works. Detailed learning reviews can become
+Markdown documents you can revisit.
 
-## インストール
+One shared skill, `learn-rust`, serves both hosts. Its instructions are written in Japanese, but responses
+follow your requested language or the language of the conversation. Documents follow their requested
+language or the repository's conventions. English code or error messages alone do not switch the response language.
 
-プラグイン機能を備えた各CLIを使用してください。説明だけならRustのインストールは不要です。
-コードを実行する場合は対象プロジェクトに合うRust toolchainを使います。
-配布検証には Codex CLI 0.157.0、Claude Code 2.1.282、Rust 1.98.1を使用しています。
+## Install
+
+Use a version of your host CLI that supports plugins. Rust is optional for explanations;
+running examples requires a toolchain compatible with the target project.
+Distribution checks use Codex CLI 0.157.0, Claude Code 2.1.282, and Rust 1.98.1.
 
 ### Codex
 
@@ -22,8 +26,7 @@ codex plugin marketplace add nwiizo/rust-learning-lab
 codex plugin add rust-learning-lab@rust-learning-lab
 ```
 
-インストール後は新しい会話を開き、`$learn-rust` を指定します。
-スキル選択画面でも `Learn Rust` を選べます。
+Start a new conversation and invoke `$learn-rust`, or select **Learn Rust** in the skill picker.
 
 ### Claude Code
 
@@ -32,56 +35,67 @@ claude plugin marketplace add nwiizo/rust-learning-lab
 claude plugin install rust-learning-lab@rust-learning-lab
 ```
 
-新しい会話で `/rust-learning-lab:learn-rust` に続けて質問します。
+Start a new conversation and use `/rust-learning-lab:learn-rust` followed by your question.
 
-配布形式は[Codexの公式仕様](https://developers.openai.com/plugins/build/plugins)と
-[Claude Codeの公式仕様](https://code.claude.com/docs/en/plugin-marketplaces)に従っています。
-このリポジトリ自身が配布用marketplaceを提供します。公式カタログへの掲載を意味しません。
+This repository provides its own marketplace using the
+[Codex plugin format](https://developers.openai.com/plugins/build/plugins) and the
+[Claude Code marketplace format](https://code.claude.com/docs/en/plugin-marketplaces).
+Distribution here does not imply inclusion in either host's official catalog.
 
-## 使い方
+## Use
 
-Codexでの例です。Claude Codeでは先頭を `/rust-learning-lab:learn-rust` に置き換えます。
+These examples use Codex syntax. In Claude Code, replace `$learn-rust` with `/rust-learning-lab:learn-rust`.
 
 ```text
-$learn-rust fold(10, |acc, item| acc - item) は、誰がどの引数を渡しますか？
-なぜこの順番なのか、型と実行の流れから説明してください。
+$learn-rust In fold(10, |acc, item| acc - item), who supplies each argument?
+Explain the order, types, and intermediate values.
 
-$learn-rust このコードの &str と &name はどう違いますか？
-記号の意味と、借用が必要になる背景から知りたいです。
+$learn-rust How do &str and &name differ? Explain the syntax and why borrowing helps here.
 
-$learn-rust Result と ? を練習したいです。まずヒントだけ出し、私の回答を待ってください。
+$learn-rust Help me practice Result and ?. Give hints first and wait for my answer.
+
+$learn-rust Review this diff and explain the design decisions and syntax behind your findings.
+Write the review to docs/parser-learning-review.md.
 ```
 
-通常の質問には先に答えます。練習を強制したり、説明の依頼だけでファイルを変更したりしません。
-コードやエラー全文、分かっている範囲があれば、一緒に渡してください。
+Ordinary questions get an answer first. Exercises are optional. Include the code, full error message,
+and what you already understand when available.
 
-## 学べること
+Detailed learning reviews of a repository produce a document such as `docs/rust-learning-review.md`
+by default. An explicit destination, “chat only,” or read-only instruction takes precedence.
+Reviewing does not authorize source edits; ask for fixes when you want them applied.
+See a [short example review document](plugins/rust-learning-lab/skills/learn-rust/references/review-example.md)
+(written in Japanese; generated reviews use the appropriate language).
 
-- **構文と背景**：記号の役割、関数の形、省略された型、解決する問題。仕様・慣習・推測を分けます。
-- **引数と流れ**：`self`、値と参照、クロージャ、引数順、戻り値、途中終了を具体値で追います。
-- **理解から実践へ**：追跡・予測・部分補完・自力での変更から、つまずきに合う練習を選びます。
-- **判断と検証**：期待する動作、変更しても守る条件、エラー原因、修正理由を結び付けます。
-- **継続学習**：説明済みと自力で確認できたことを分け、次に試す一点を残します。
+## What it supports
 
-10件のプログラミング教育・AI支援研究と、2件の記憶研究を参考にしています。
-対象・結果・限界を[研究ノート](plugins/rust-learning-lab/skills/learn-rust/references/learning-evidence.md)に記載しています。
-他言語や授業の結果をRustの個別学習へそのまま一般化せず、このプラグイン自体の学習効果は未測定です。
+- **Syntax and rationale:** read symbols, signatures, and inferred types; distinguish language rules, conventions, and speculation.
+- **Arguments and flow:** trace receivers, references, closure arguments, return values, and early exits with concrete inputs.
+- **Independent practice:** choose tracing, prediction, partial completion, small edits, or debugging to match the difficulty.
+- **Review and verification:** locate defects and behavioral changes, then explain their conditions, impact, and fixes through the code.
+- **Continuity:** distinguish an explanation given from understanding demonstrated, and leave a focused next step when useful.
 
-## 開発と確認
+The guidance draws on ten programming education and AI assistance studies, plus two memory studies.
+The [research notes](plugins/rust-learning-lab/skills/learn-rust/references/learning-evidence.md)
+record findings and limitations. Classroom or other-language results are not treated as proof of effectiveness
+for individual Rust learners. This plugin's learning effectiveness has not been measured.
 
-`plugins/rust-learning-lab/skills/learn-rust/` が両ホストで共用するスキルです。
-補助資料は質問に必要なときだけ読み込みます。MCPサーバー、フック、独自ランタイムは含みません。
-プラグイン自身によるデータ収集はありません。会話やツール実行には利用するホストの設定が適用されます。
+## Develop and verify
+
+Both hosts use `plugins/rust-learning-lab/skills/learn-rust/`. Supporting references are read only when
+relevant. The plugin includes no MCP servers, hooks, or custom runtime. It does not independently collect
+data; conversation handling and tool execution follow your host's settings.
 
 ```sh
 rustdoc --test --edition 2024 plugins/rust-learning-lab/skills/learn-rust/references/worked-examples.md
 rustdoc --test --edition 2024 plugins/rust-learning-lab/skills/learn-rust/references/rust-2024.md
+rustdoc --test --edition 2024 plugins/rust-learning-lab/skills/learn-rust/references/review-example.md
 claude plugin validate .
 claude plugin validate plugins/rust-learning-lab
 ```
 
-CIは配布メタデータの整合とRust例を確認します。[対話の確認課題](docs/evaluation.md)は手動評価用です。
-構文検査やコード例の成功だけでは、モデルの回答品質や学習効果を実証できません。
-変更時は両ホストのmanifestのversionを揃えて更新してください。
+CI checks distribution metadata and executable Rust examples. The [conversation scenarios](docs/evaluation.md)
+are for manual evaluation; passing syntax checks and examples does not establish model behavior or learning outcomes.
+Keep the versions in both host manifests aligned, and update both READMEs when usage changes.
 
-MIT License。リンク先の論文・外部資料にはそれぞれの利用条件が適用されます。
+MIT License. Linked papers and external resources retain their own terms.

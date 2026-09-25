@@ -24,3 +24,4 @@ jobs:
         run: |
           rustdoc +stable --test --edition 2024 plugins/rust-learning-lab/skills/learn-rust/references/worked-examples.md
           rustdoc +stable --test --edition 2024 plugins/rust-learning-lab/skills/learn-rust/references/rust-2024.md
+          rustdoc +stable --test --edition 2024 plugins/rust-learning-lab/skills/learn-rust/references/review-example.md

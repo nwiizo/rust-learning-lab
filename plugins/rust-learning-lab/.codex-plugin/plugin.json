@@ -1,7 +1,7 @@
 {
   "name": "rust-learning-lab",
-  "version": "0.1.0",
-  "description": "Learn Rust through syntax, design rationale, code tracing, practice, and debugging.",
+  "version": "0.1.1",
+  "description": "Learn and review Rust through syntax, design rationale, code tracing, practice, and debugging.",
   "author": {
     "name": "nwiizo",
     "url": "https://github.com/nwiizo"
@@ -10,14 +10,14 @@
   "repository": "https://github.com/nwiizo/rust-learning-lab",
   "homepage": "https://github.com/nwiizo/rust-learning-lab#readme",
   "license": "MIT",
-  "keywords": ["rust", "learning", "syntax", "debugging"],
+  "keywords": ["rust", "learning", "syntax", "debugging", "code-review"],
   "interface": {
     "displayName": "Rust Learning Lab",
-    "shortDescription": "Understand Rust. Practice reasoning about code.",
-    "longDescription": "Explain Rust syntax and its purpose, trace types and ownership, and build independent skills through focused practice and verification.",
+    "shortDescription": "Learn Rust and review code with clear reasoning.",
+    "longDescription": "Explain Rust syntax and its purpose, trace types and ownership, and review code with concrete findings and understandable fixes. Build independent skills through practice and verification.",
     "developerName": "nwiizo",
     "category": "Productivity",
     "capabilities": [],
-    "defaultPrompt": ["Explain this Rust code from syntax to purpose.", "Show how arguments, types, and ownership move.", "Help me debug this Rust code and understand the fix."]
+    "defaultPrompt": ["Explain this Rust code from syntax to purpose.", "Review this Rust change and explain each finding.", "Help me debug this Rust code and understand the fix."]
   }
 }

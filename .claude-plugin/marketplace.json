@@ -5,6 +5,6 @@
   "plugins": [{
     "name": "rust-learning-lab",
     "source": "./plugins/rust-learning-lab",
-    "description": "Understand Rust syntax and practice reading, writing, and debugging code."
+    "description": "Learn and review Rust through syntax, rationale, practice, and debugging."
   }]
 }
