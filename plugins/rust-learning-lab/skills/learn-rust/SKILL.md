@@ -1,6 +1,6 @@
 ---
 name: learn-rust
-description: Explain Rust syntax, code, and compiler errors through their purpose, types, and ownership, and support focused practice. Review Rust code and diffs with concrete findings, impacts, and understandable fixes. Do not add learning exercises to implementation-only requests.
+description: Explain Rust syntax, code, and compiler errors through their purpose, types, and ownership, and support focused practice. Review Rust code and diffs with concrete findings, impacts, and understandable fixes. Create educational review documents from PRs or commits. Do not add learning exercises to implementation-only requests.
 ---
 
 # Learn Rust
@@ -35,9 +35,12 @@ findings and evidence. Use syntax, types, and ownership to explain why a problem
 Explain necessary notation to beginners; do not repeat prerequisites to experienced readers.
 Do not turn an ordinary learning question into a review or exercise.
 
-For detailed reviews or design explanations using repository changes as learning material, also produce Markdown
-following [Review documents](references/review-document.md). Respect explicit destinations, chat-only requests,
-and read-only constraints. Do not automatically create documents for brief findings or standalone snippet questions.
+For detailed reviews or design explanations using repository changes, PRs, or commits as learning material, also produce
+Markdown following [Review documents](references/review-document.md). Resolve the requested source and record the compared
+revisions. Default to separate files in `docs/rust-learning-review/`; maintain its English and Japanese README indexes
+on every document creation or update. Exclude the directory from Git and routine agent discovery, and read it only for
+requested learning work or document maintenance. Respect explicit destinations, chat-only requests, and read-only constraints.
+Do not automatically create documents for brief findings or standalone snippet questions.
 
 ## Support understanding and retention
 

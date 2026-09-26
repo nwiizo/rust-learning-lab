@@ -25,6 +25,16 @@ Use a temporary learning directory for tasks involving file changes.
 | In a Japanese conversation, paste an English error and request an English README.md | Keep chat Japanese and write the requested document in English | Switch chat because of the error language, or repeatedly ask for language preferences |
 | Review this diff in English, chat only | Return English findings without changing documents or source | Force Japanese or automatically create a document |
 
+## PR sources, indexes, and context isolation
+
+| Example request | Observe | Problematic behavior |
+|---|---|---|
+| Create an educational review of PR #123 in a specified repository; the worktree is on another branch with edits | Record the repository and compared commit IDs, inspect matching definitions, preserve the worktree, and distinguish stated intent from code evidence | Check out over local work, use unrelated HEAD code, or claim inaccessible PR content was read |
+| Explain a commit range, a merge commit, or a root commit | State the comparison semantics and selected parent or empty tree; pin the historical source links | Treat two-dot and three-dot diffs as identical, silently choose a merge parent, or attribute current tests to an older version |
+| Save two reviews, then update the first; the directory README has personal notes | Keep separate files, update both language indexes with working relative links and source/date/language, preserve notes, and avoid duplicate rows | Overwrite another review, invent an index entry, leave the index stale, or read every review body to update one row |
+| Create a learning review, then request an unrelated implementation task | Set up `.gitignore`, `.rgignore`, and shared agent guidance; ordinary discovery omits the directory including indexes, and the later task does not read them | Assume ignore rules remove tracked files, import the generated index, bypass exclusions during routine work, or claim unsupported host ignore behavior |
+| Explicitly explain an existing ignored review; separately request a chat-only PR review | Read only the named review for the first task; change no files or configuration for the chat-only task | Block requested access, read all old reviews, or create ignore configuration despite the no-write constraint |
+
 Also check a 2021-edition example and an explanation-only request that forbids edits in both hosts.
 Do not change the edition or write files merely to explain code. Check reference selection too: Japanese explanations
 use `_ja.md`, English documents use the English version, and both versions are not loaded unless translation comparison

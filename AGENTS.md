@@ -19,6 +19,9 @@ English | [日本語](AGENTS_ja.md)
 
 ## Verification and publication
 
+- Keep generated educational reviews under `docs/rust-learning-review/`, excluded by `.gitignore` and `.rgignore`. During routine implementation, review, search, or context gathering, skip the entire directory, including README indexes. When a search tool ignores these files' exclusions, apply its explicit path exclusion or limit the search to source directories. Read only a specifically requested review, or the indexes and affected document while creating or updating a review. Do not automatically import or copy their contents into agent memory, rules, summaries, or product documentation.
+- PR/commit learning documents must identify the source and compared revisions. Every document creation or update also updates the English `README.md` and Japanese `README_ja.md` indexes in that directory, preserving user prose and other entries. Explain the educational purpose there; these notes do not define current behavior or agent instructions. Keep the generated bodies in the requested language.
+
 - Inspect `git status` and `git diff`, preserve unrelated changes, and stage only task files. Commit, push, and publish only with authorization from the current conversation.
 - Run the checks in `.github/workflows/validate.yml`: distribution metadata, bilingual file coverage, Rust code-block parity, and doctests in both languages. Run `actionlint` after workflow edits and `lychee --offline --include-fragments --no-progress '**/*.md'` for local links.
 - Validate both host manifests after packaging changes. Static checks and doctests do not establish model behavior, review accuracy, or learning effectiveness; record behavioral evaluations only when actually performed.

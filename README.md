@@ -54,17 +54,35 @@ $learn-rust How do &str and &name differ? Explain the syntax and why borrowing h
 
 $learn-rust Help me practice Result and ?. Give hints first and wait for my answer.
 
-$learn-rust Review this diff and explain the design decisions and syntax behind your findings.
-Write the review to docs/parser-learning-review.md.
+$learn-rust Create an educational review of PR #123 in owner/repo.
+Explain the before/after behavior, syntax, argument order, and design decisions.
+Save it to docs/rust-learning-review/pr-123-parser.md and update the directory index.
+
+$learn-rust Create a learning document from commit <sha> (or the range <base>..<head>).
+Record the compared revisions, explain ownership and error handling, and review potential problems.
+Save it under docs/rust-learning-review/ and update the directory index.
 ```
 
 Ordinary questions get an answer first. Exercises are optional. Include the code, full error message,
 and what you already understand when available.
 
-Detailed learning reviews of a repository produce a document such as `docs/rust-learning-review.md`
-by default. An explicit destination, “chat only,” or read-only instruction takes precedence.
+Replace the example repository, PR number, and commit placeholders with real sources. A PR URL also works.
+The skill reads the selected diff and relevant code at that revision; it separates stated intent from verified behavior.
+
+Detailed learning reviews produce separate Markdown files under `docs/rust-learning-review/` by default.
+Each creation or update also maintains `README.md` (English) and `README_ja.md` (Japanese) in that directory with
+relative document links, source PR/commit, language, and update date. The indexes explain that these are educational
+notes about specific source snapshots, not product documentation or repository instructions.
+An explicit destination, “chat only,” or read-only instruction takes precedence.
 Reviewing does not authorize source edits; ask for fixes when you want them applied.
 See a [short example review document](plugins/rust-learning-lab/skills/learn-rust/references/review-example.md).
+
+On the first document, the skill adds the directory to `.gitignore` and `.rgignore` and records its context-exclusion
+rule in the project's agent guidance, preserving existing settings. The indexes are ignored too. Routine work skips
+these materials; explicitly requested learning work can read the relevant document. The guidance also tells agents not
+to copy this content automatically into memory, rules, summaries, or product documentation. These measures do not block
+every possible direct read. Already tracked files remain tracked, and instructions forbidding configuration
+changes take precedence. The plugin does not install a background indexer: the skill updates the index when it writes a review.
 
 ## What it supports
 
