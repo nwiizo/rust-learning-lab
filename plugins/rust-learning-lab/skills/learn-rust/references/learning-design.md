@@ -22,6 +22,24 @@ These observations help choose explanations; they are not a classification of a 
 When difficulties overlap, supply the prerequisite needed to proceed. Do not assume a typo reveals a conceptual error.
 Start with what the user's explanation and code show; ask only about unknowns that change the answer.
 
+## Choose one activity before choosing a method
+
+Someone experienced in another language may know algorithms but need help with Rust ownership; someone who
+understands a signature may still need help navigating a new codebase. Match support to the current task,
+not a permanent label such as beginner or expert.
+
+| Current activity | Useful starting point |
+|---|---|
+| Locate information | Show the definition, inferred type, or relevant API documentation; do not turn a missing fact into a quiz |
+| Understand existing behavior | Trace one input through one path, naming the role of each group of operations |
+| Implement an understood plan | Map the plan's values and steps to Rust types and expressions |
+| Extend existing behavior | Identify the changed condition and the behavior that must remain |
+| Explore an uncertain design | Compare small alternatives against one concrete need before choosing a general abstraction |
+
+For onboarding, begin with one activity, such as finding where an error becomes a user-visible message.
+Avoid simultaneously requiring unfamiliar navigation, domain rules, syntax, and a feature implementation.
+Looking up an infrequent API is normal; reserve optional recall practice for recurring decisions that interrupt work.
+
 ## Reduce the burden of reading
 
 - Express one target capability, such as explaining why a variable remains usable after a call. Return to that target
@@ -35,8 +53,34 @@ Start with what the user's explanation and code show; ask only about unknowns th
 - Externalize difficult state using only useful columns: operation/before/after for values, or variable/type/owner/referent/later
   usability for ownership. Separate compile-time constraints from runtime changes. Connect where values reside to permitted
   reads, writes, and moves. Do not claim every borrow-checker rejection would necessarily produce a runtime bug.
-- Expand long expressions while preserving correspondence. For metaphors such as ownership as boxes, state their limits
-  and return to actual types and compiler rules.
+- Expand long expressions in an explanation or learning copy while preserving correspondence. Introducing a binding
+  can change borrowing and temporary destruction; check evaluation count, side effects, and resource scope before
+  calling a rewrite equivalent. Use the [edition contrasts](rust-2024.md) where relevant. For metaphors such as
+  ownership as boxes, state their limits and return to actual types and compiler rules.
+
+Connect three levels: the concrete trace, the rule it illustrates, and a changed case where that rule helps.
+For example, trace a `String` argument moving into a function, explain the non-`Copy` ownership transfer,
+then contrast passing `&str` when the caller needs its text again. Return to the user's original expression.
+Neither abstract terminology alone nor an endless series of examples supplies this connection.
+
+Distinguish a variable's type from its role. Two `usize` values may be a current position and a count of matches;
+show which operations update each. Names are clues that need checking. Familiar groups are learned through
+use and explanation, not by imposing a fixed number of symbols a person should hold in memory.
+
+## Replace a misleading prior model
+
+When the learner explains a consistent prediction error, identify the rule they used before adding more detail.
+A rule from another language may be useful in some cases and misleading in others. Do not infer it from a typo.
+
+For “assignment makes an independent copy,” contrast `i32` and `String` in the same small use-after-assignment
+example. Give the replacement rule: the value's `Copy` implementation determines copying versus moving;
+independent duplication uses the type's actual duplication operation. For “`&T` means nothing can change,”
+separate ordinary shared access from interior mutability. See [Expert reading](expert-reading.md).
+
+Make the counterexample's observation and the replacement explanation explicit; “that is wrong” leaves no
+usable alternative. If practice was requested, try a changed case with less help and revisit it later when useful.
+A correct immediate answer does not establish that the earlier model will never return. Teach a precise rule
+with its conditions rather than replacing one slogan with another.
 
 ## Move from explanations to independent practice
 
@@ -106,8 +150,6 @@ Rust-validated plan. Source: [Cepeda et al., 2008](https://pubmed.ncbi.nlm.nih.g
 
 ## Make resuming easier
 
-When useful in ongoing study or at a break, leave a brief note of the decision covered, what the learner independently
-explained, and one next check. For example: “Explained the `&String` case; next predict passing `String` by value.”
-If only an explanation was provided, record it as explained, not mastered. Keep notes in the conversation by default;
-write files or accumulate learning history only when requested. For assumptions and failed approaches that matter to
-resuming, see [Engineering practice](engineering-practice.md#leave-enough-information-to-resume).
+Use a short conversational resumption note when useful, following
+[Engineering practice](engineering-practice.md#leave-enough-information-to-resume).
+Keep explanation given, success with help, and independent understanding distinct; save learning history only when requested.

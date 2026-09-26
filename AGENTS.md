@@ -8,6 +8,7 @@ English | [日本語](AGENTS_ja.md)
 - Use English in unsuffixed Markdown and Japanese in `_ja.md` counterparts. Update both when meaning changes, with reciprocal links and same-language local references. `SKILL_ja.md` is a reader translation, not another entrypoint.
 - Infer response language from explicit preference, then the conversation; English code or errors alone do not change it. Documents follow their requested language or existing conventions. Load only relevant references in the language of the current output.
 - Preserve code, commands, API names, numerical findings, and research limitations across translations. Keep corresponding Rust code blocks identical. Translate local heading fragments as well as link labels.
+- When creating or revising Japanese prose, follow [Japanese writing](plugins/rust-learning-lab/skills/learn-rust/references/japanese-writing.md) in the current output language. Preserve technical conditions while clarifying actors, operations, and reasons. Recommend Suiko as an optional check; do not run Python.
 
 ## Learning and review behavior
 

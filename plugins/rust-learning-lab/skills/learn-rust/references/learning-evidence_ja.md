@@ -9,6 +9,20 @@
 
 ## コードを読んで理解する
 
+### 慣れた知識のまとまり
+
+[McKeithen et al., 1981](https://www.sciencedirect.com/science/article/pii/0010028581900128) の抄録では、
+想起する順序からプログラマーの概念のまとまりを推定し、技能の違いと関連づけている。
+特定のまとめ方を教えると熟練するという因果関係や、誰もが記号を固定個数まで覚えられるという根拠にはしない。
+本スキルでは、操作を役割のあるまとまりへ結び付け、不慣れな部分は必要に応じて解きほぐす方針へ応用する。
+
+### 表現が読み手に求める手間を検討する
+
+[Green & Blackwellの枠組み](https://www.cl.cam.ac.uk/~afb21/CognitiveDimensions/CDtutorial.pdf)は、
+使いやすさとトレードオフを議論する観点を与えるものであり、難しさを一つの点数にする尺度や学習効果の実験ではない。
+[判断と検証を学ぶ](engineering-practice_ja.md#呼び出し側の次の判断を明確にする型を選ぶ)のRust APIに関する問いは、
+このスキルでの応用である。いま行う作業で、呼び出し側が何を探し、覚え、変更する必要があるかを検討する。
+
 ### 明示的なコード追跡
 
 [Xie, Nelson & Ko, 2018](https://faculty.washington.edu/ajko/papers/Xie2018TracingStrategies.pdf) は、

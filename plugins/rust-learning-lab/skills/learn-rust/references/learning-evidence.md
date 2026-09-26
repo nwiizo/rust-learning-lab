@@ -9,6 +9,20 @@ was checked, stay within it; read the paper before discussing detailed effect si
 
 ## Reading and understanding code
 
+### Organization of familiar knowledge
+
+The abstract of [McKeithen et al., 1981](https://www.sciencedirect.com/science/article/pii/0010028581900128)
+describes inferring programmers' organization of concepts from recall order and relating it to skill differences.
+This is not evidence that teaching a particular grouping causes expertise or that everyone has a fixed symbol capacity.
+The application here is to connect operations into named roles, then unpack unfamiliar parts when needed.
+
+### Evaluating the effort imposed by a representation
+
+[Green & Blackwell's framework](https://www.cl.cam.ac.uk/~afb21/CognitiveDimensions/CDtutorial.pdf)
+offers dimensions for discussing usability and tradeoffs, not a single difficulty score or a learning-effect experiment.
+The Rust API questions in [Engineering practice](engineering-practice.md#design-types-to-make-a-callers-next-decision-clear)
+are our application: inspect what information a caller must find, remember, or change for the current activity.
+
 ### Explicit tracing
 
 [Xie, Nelson & Ko, 2018](https://faculty.washington.edu/ajko/papers/Xie2018TracingStrategies.pdf) compared instruction

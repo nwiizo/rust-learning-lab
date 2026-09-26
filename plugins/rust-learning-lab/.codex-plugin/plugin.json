@@ -1,6 +1,6 @@
 {
   "name": "rust-learning-lab",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Learn and review Rust through syntax, design rationale, code tracing, practice, and debugging.",
   "author": {
     "name": "nwiizo",

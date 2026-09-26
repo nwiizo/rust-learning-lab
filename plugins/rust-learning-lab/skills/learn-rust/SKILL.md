@@ -23,6 +23,13 @@ fallback for other languages. Respond in the user's language even when using the
 work, choose by the current output. Do not load both translations unless comparing them is the task.
 `SKILL_ja.md` is a translation for readers, not an additional skill or a required second instruction load.
 
+For Japanese output, name the relevant values and operations, explain unfamiliar terms in context, and preserve
+conditions and uncertainty when simplifying prose. For substantial explanations or wording revisions, use
+[Japanese writing](references/japanese-writing.md) in the language of the current output.
+For Japanese output, suggest [Suiko](https://github.com/nwiizo/suiko) as an optional wording check, with a relevant
+command or purpose; if already used, report the check. Avoid repeated suggestions in the same task.
+Follow the reference for usage and interpretation; do not run Python or install tools without a request.
+
 For beginners, do not skip symbols or implicit behavior needed to understand the answer. The perspectives below are
 options, not a checklist for every response. Narrow the difficulty from the question and code, skip familiar material,
 and start with a small beginner-friendly explanation if knowledge is unclear.
@@ -64,6 +71,8 @@ For difficulty learning, practice, revision, learning to debug, or ongoing study
 [Research and scope](references/learning-evidence.md). For AI-assisted projects, learning specifications or tests,
 alternative implementations, or resuming study, use [Engineering practice](references/engineering-practice.md).
 Establish inputs, outputs, and conditions to preserve; assess working code and learner understanding separately.
+For persistence, retries, cancellation, or shared state, use [System boundaries](references/systems-thinking.md)
+to separate Rust's local guarantees from the behavior of databases and external services. Load only the relevant sections.
 
 ## Teach from the provided code
 
@@ -83,8 +92,20 @@ Establish inputs, outputs, and conditions to preserve; assess working code and l
   for a symbol or an author's intention. Check official material or RFCs before claiming adoption history.
 - Show how position changes a symbol's role: `&T` is a reference type, while `&value` borrows a value. Connect the role
   to types and ownership. Distinguish mutable bindings from `&mut T`, and shadowing from assignment, where relevant.
-- Do not introduce necessary notation such as `::<T>`, `|x|`, `?`, or `'a` without explaining what it specifies, receives,
-  or returns in this code. Definitions alone are insufficient.
+- When symbols impede reading, explain the relevant occurrences of `&`, `'a`, `*`, `::`, `::<…>`, `|…|`, `?`, `!`,
+  `->`, and `=>`: identify their role at that position, read the expression in plain language, and connect it to a
+  concrete benefit and a small omission or replacement contrast. Names such as “dereference” or “turbofish” alone
+  are insufficient. Distinguish inferred notation from required notation; omission does not always cause an error.
+  Use the relevant sections of [Worked examples](references/worked-examples.md) for symbol-reading questions.
+  Do not assign one meaning to every occurrence of a symbol or introduce unexplained notation in the explanation.
+- For a broader inventory or notation not covered by those examples, use [Symbol guide](references/symbol-guide.md).
+  Explain the relevant entries in context; show the broader list when requested, not as a prerequisite to every answer.
+  For questions about signs and meaning, its final section connects notation to relationships, state changes, and
+  composition. Apply the ideas directly to the code; distinguish the teaching
+  perspective from language rules and established learning effects.
+- For deeper questions about what experienced readers infer from notation and types, use
+  [Reading types for guarantees and open questions](references/expert-reading.md). Separate what the signature
+  establishes from implementation-dependent behavior and measured performance; make the reasoning visible.
 - Use small contrasts for questions about semicolons, patterns versus expressions, and similar distinctions.
   Stay with relevant syntax instead of listing the language's syntax or repeating known basics.
 
