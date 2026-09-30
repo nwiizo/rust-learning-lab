@@ -9,7 +9,7 @@ through arguments, types, ownership, and control flow, then practice making and 
 Reviews identify concrete problems and explain why a fix works. Detailed learning reviews can become
 Markdown documents you can revisit.
 
-One shared skill, `learn-rust`, serves both hosts. Its instructions and all eight references are available in
+One shared skill, `learn-rust`, serves both hosts. Its instructions and supporting references are available in
 English and Japanese. Responses follow your requested language or the language of the conversation. Documents follow their requested
 language or the repository's conventions. English code or error messages alone do not switch the response language.
 
@@ -96,6 +96,13 @@ The guidance draws on ten programming education and AI assistance studies, plus 
 The [research notes](plugins/rust-learning-lab/skills/learn-rust/references/learning-evidence.md)
 record findings and limitations. Classroom or other-language results are not treated as proof of effectiveness
 for individual Rust learners. This plugin's learning effectiveness has not been measured.
+
+For longer learning materials, [Decisions and evidence](plugins/rust-learning-lab/skills/learn-rust/references/verified-explanations.md)
+connects the reader's uncertain judgments to checked examples, source-based diagrams, and prerequisite order.
+
+[Checking documents](plugins/rust-learning-lab/skills/learn-rust/references/checking-documents.md) explains how to
+use the separate optional Rust CLI `rust-learning-check` for source/output quotations and paired compile-fail
+examples. The plugin does not bundle or install this tool; existing tests remain the default for project code.
 
 ## Develop and verify
 

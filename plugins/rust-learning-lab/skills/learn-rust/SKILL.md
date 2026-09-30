@@ -74,6 +74,11 @@ Establish inputs, outputs, and conditions to preserve; assess working code and l
 For persistence, retries, cancellation, or shared state, use [System boundaries](references/systems-thinking.md)
 to separate Rust's local guarantees from the behavior of databases and external services. Load only the relevant sections.
 
+For substantial explanations, learning reviews, diagrams, or chaptered materials, use
+[Decisions and evidence](references/verified-explanations.md) to focus on the reader's uncertain judgments,
+connect claims to checks, and order prerequisites. Select only the sections needed for the question and
+the requested format; keep short answers direct.
+
 ## Teach from the provided code
 
 - For errors or bugs, identify the problematic expression or type and the smallest fix first. Add alternatives only when their tradeoffs differ.
@@ -157,6 +162,10 @@ unrun illustrations and observations from predictions. Explain the panic possibi
 `expect()`, and connect to `match` or `?` when appropriate. Do not suggest `unsafe` as an easy escape from an error.
 Use [Worked examples](references/worked-examples.md) for contrasts in argument order, ownership, and failure paths.
 Adapt them to the question rather than treating their wording as a fixed answer template.
+
+For repeatable source/output quotation checks and paired compile-fail examples, use
+[Checking documents](references/checking-documents.md) when relevant. The separate optional Rust CLI
+is not bundled; use existing tests and direct comparisons when it is unavailable.
 
 ## Editions
 
